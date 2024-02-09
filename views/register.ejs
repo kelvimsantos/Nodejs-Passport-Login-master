@@ -1,0 +1,33 @@
+<!-- register.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta</title>
+    <link rel="stylesheet" type="text/css" href="/styleLogin.css">
+    <!-- Inclua outros links de estilo, se necessário -->
+</head>
+<body>
+    <div class="login-container">
+        <h2>Criar Conta</h2>
+        <form class="create-account-form" action="/register" method="POST">
+            <div>
+                <label for="new-username">Nome:</label>
+                <input type="text" id="new-username" name="name" required>
+            </div>
+            <div>
+                <label for="new-email">Email:</label>
+                <input type="email" id="new-email" name="email" required>
+            </div>
+            <div>
+                <label for="new-password">Senha:</label>
+                <input type="password" id="new-password" name="password" required>
+            </div>
+            <button type="submit" id="create-account-button">Criar Conta</button>
+        </form>
+    </div>
+    <!-- Inclua outros scripts, se necessário -->
+</body>
+</html>

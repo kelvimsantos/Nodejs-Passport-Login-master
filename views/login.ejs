@@ -1,0 +1,33 @@
+<!-- views/login.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>SkyWatchers - Login</title>
+    <link rel="stylesheet" type="text/css" href="./styleLogin.css">
+    <link rel="stylesheet" type="text/css" href="estilo-custom.css">
+    <!-- Outros scripts que você pode precisar -->
+    <script src="script.js"></script>
+</head>
+<body>
+    <div class="login-container">
+        <h1>SkyWatchers</h1>
+        <h1>Login</h1>
+        <% if (messages.error) { %>
+            <p><%= messages.error %></p>
+        <% } %>
+        <form action="/login" method="POST">
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Entrar</button>
+            <a href="/register">Criar Conta</a>
+        </form>
+    </div>
+</body>
+</html>

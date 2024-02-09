@@ -1,0 +1,116 @@
+.container {
+    display: flex;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    background-color: cadetblue;
+}
+
+.profile {
+    flex: 1;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    justify-items: auto;
+        
+}
+.preview-image {
+    display: flex;
+   
+    top: 3%;
+    left:5%;
+    
+    /*  transform: translate(-20%, -20%);*/
+   
+    border-radius: 50%;
+  
+    width: 150px; /* Defina o tamanho desejado */
+    height: 150px; /* Defina o tamanho desejado */
+    
+    border: 5px solid #570b6d;
+    object-fit: cover; /* Mantém a proporção e corta o excesso */
+}
+
+
+.feed {
+    flex: 2;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: rgb(113, 212, 216);
+}
+
+.sidebar {
+    flex: 1;
+    padding: 20px;
+    border: 1px 1px 10px 1px solid #ccc;
+    bottom: 0;
+}
+
+.friend p,
+.community p {
+    font-size: 12px; /* Defina o tamanho da fonte desejado */
+    margin: .5px;
+}
+
+.friends-communities {
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.friends-list,
+.communities-list {
+    list-style-type: none;
+    padding: 0;
+    border: 1px solid #ccc;
+}
+
+.friend-container,
+.community-container {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+}
+
+.friend,
+.community {
+    text-align: center;
+}
+
+.friend img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* Para deixar completamente circular */
+    margin-bottom: 10px;
+    border: 2px solid #ccc; /* Adiciona uma borda */
+}
+
+.community img {
+    width: 60px; /* Largura maior para as imagens das comunidades */
+    height: 40px; /* Altura menor para as imagens das comunidades */
+    margin-bottom: 4px;
+    border: 2px solid #ccc; /* Adiciona uma borda */
+}
+
+.community {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.friends-list li,
+.communities-list li {
+    margin-bottom: 10px;
+}
+
+.left-image {
+    left: 0;
+    position: absolute;
+    bottom: 0;
+    width: 10%;
+}
+
+.right-image {
+    right: 0;
+    position: absolute;
+    bottom: 0;
+    width: 10%;
+}

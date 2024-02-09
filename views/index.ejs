@@ -1,0 +1,111 @@
+<!-- profile.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seu Perfil</title>
+    
+    <link rel="stylesheet" type="text/css" href="./perfil.css">
+    <!-- Adicione outros links de estilo, se necessário -->
+</head>
+
+<body>
+    <form action="/save-user-info" method="POST">
+    <div class="profile-container">
+        <!-- Adicionando foto de capa -->
+        <div class="cover-container">
+            <img id="preview-cover-image" class="preview-image-capa" src="" alt="Imagem de Capa">
+            <form id="image-upload-form" action="/upload-cover" method="post" enctype="multipart/form-data">
+            <div class="buttons">
+                <input name="coverImage" type="file" id="cover-image" accept="image/*">
+                <button id="update-cover-image">Atualizar Imagem de Capa</button>
+            </div>
+            </form>
+        </div>
+
+        <!-- Adicionando foto de perfil -->
+        <form id="image-upload-form" action="/upload" method="post" enctype="multipart/form-data">
+            <input name="profileImage" type="file" id="profile-image" accept="image/*">
+            <button type="submit" id="update-profile-image">Atualizar Imagem</button>
+            <img id="preview-image" class="preview-image" src="" alt="Imagem do Perfil">
+        </form>
+
+        <div class="container-info">
+            <h1>Seu Perfil</h1>
+            <h1 id="nomeUsuario"></h1>
+
+            <a href="/feed">Ir para o Feed</a>
+            
+            <div class="div-diario">
+                <label for="nome" id="nomeUser">Nome Usuario</label>
+                <input type="text" id="nome" name="nome">
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+                <form id="report-form">
+                    <label for="location">Localização:</label>
+                    <input type="text" id="location" name="location" required>
+                    <label for="time">Hora:</label>
+                    <input type="text" id="time" name="time">
+                    <label for="date">Data:</label>
+                    <input type="date" id="date" name="date">
+                    <button type="submit">Criar Relato</button>
+                </form>
+
+                <!-- Seção para declarações -->
+                <div id="declarations-section">
+                    <h1>DIARIO DE DECLARAÇÕES</h1>
+                    <h2>Declaraçãos</h2>
+                    <form id="declaration-form">
+                        <!-- <label for="declaration">Publicar Declaração:</label>-->
+                        <textarea class="declaration" id="declaration" name="declaration"></textarea>
+                        <br/>
+                        <button type="submit">Publicar</button>
+                    </form>
+                    <ul id="declaration-list"></ul>
+                </div>
+
+                <!-- Seção para comentários -->
+                <h2>Comentários</h2>
+                <ul id="comment-list"></ul>
+                <form id="comment-form">
+                    <label for="comment">Comentário:</label>
+                    <input type="text" id="comment" name="comment">
+                    <button type="submit">Adicionar Comentário</button>
+                </form>
+        </div>
+    </div>
+
+    <button id="salvarPerfil" type="submit">Salvar info</button>
+    <form action="/logout?_method=DELETE" method="POST">
+        <button type="submit">Log Out</button>
+    </form>
+    <!-- Inclua outros scripts, se necessário -->
+    <script>// Verifica se o comentário tem mais de duas linhas
+        function checkCommentSize(commentElement) {
+            var lineHeight = parseInt(window.getComputedStyle(commentElement).lineHeight);
+            var maxHeight = lineHeight * 2; // Altura máxima para duas linhas
+            if (commentElement.offsetHeight > maxHeight) {
+                commentElement.classList.add('expandable');
+                commentElement.addEventListener('click', function() {
+                    this.classList.toggle('full');
+                    if (this.classList.contains('full')) {
+                        this.querySelector('.expandable::after').textContent = "Ver menos";
+                    } else {
+                        this.querySelector('.expandable::after').textContent = "Ver mais";
+                    }
+                });
+            }
+        }
+        
+        // Adiciona a lógica de verificação a todos os comentários
+        document.querySelectorAll('#comment-list li').forEach(function(comment) {
+            checkCommentSize(comment);
+        });</script>
+    <script src="./script.js"></script>
+</form>
+</body>
+
+</html>

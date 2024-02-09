@@ -1,0 +1,150 @@
+/* Estilos para o componente de perfil */
+
+
+.left-column {
+    background-color: #7147b0;
+    padding: 20px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.left-column h2 {
+    font-size: 20px;
+    margin: 0;
+}
+
+.left-column p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.report-list {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.report-list li {
+    font-size: 14px;
+    margin: 5px 0;
+}
+.profile-container{
+    
+    background-color: #5592dd;
+    padding-top: 3%;
+}
+
+.container-info{
+    margin:30px;
+}
+.preview-image {
+    position: absolute;
+    top: 15%;
+    left:20%;
+    
+    /*  transform: translate(-20%, -20%);*/
+   
+    border-radius: 50%;
+  
+    width: 200px; /* Defina o tamanho desejado */
+    height: 200px; /* Defina o tamanho desejado */
+    
+    border: 5px solid #570b6d;
+    object-fit: cover; /* Mantém a proporção e corta o excesso */
+}
+
+
+/* Estilize o contêiner da foto de capa */
+.cover-container {
+   
+    min-height: 250px; /* Define uma altura mínima para criar o espaço em branco (ajuste conforme necessário) */
+    background-color: #fff; /* Define um fundo branco para criar o espaço em branco */
+    margin: 0 auto ; /* Centraliza horizontalmente o contêiner */
+    width: 90%; /* O contêiner ocupará toda a largura disponível */
+    height: 350px; /* Define uma altura fixa para o contêiner da imagem */
+    position: relative; /* Para posicionar a foto de perfil dentro deste contêiner */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Outros estilos do contêiner da foto de capa, como fundo ou borda, se necessário */
+}
+
+.preview-image-capa {
+    
+    width: 100%; /* A imagem de capa ocupará toda a largura do contêiner */
+    height: 100%; /* A altura será ajustada automaticamente para a proporção da imagem */
+    object-fit: cover; /* Mantém a proporção e corta o excesso */
+    display: block; /* Remove espaços em branco que podem ser causados por elementos inline */
+}
+
+
+button#update-image, button#update-cover-image {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px; /* Ajuste o tamanho desejado */
+    cursor: pointer;
+    font-size: 14px; /* Ajuste o tamanho da fonte desejado */
+}
+
+button#update-image:hover, button#update-cover-image:hover {
+    background-color: #0056b3;
+}
+.buttons {
+    position: absolute;
+    top: 10%; /* Posiciona os botões verticalmente no meio da imagem de capa */
+    left: 90%; /* Posiciona os botões horizontalmente no meio da imagem de capa */
+    transform: translate(-50%, -50%); /* Centraliza os botões */
+    text-align: center; /* Centraliza o texto dos botões */
+}
+
+/* Estilos para os botões */
+.buttons input[type="file"],
+.buttons button {
+    margin: 5px; /* Espaçamento entre os botões */
+}
+.div-diario{
+    
+    width: 80%; /* Defina a largura da sua div */
+    margin: 0 auto; /* Define as margens automáticas para centralização horizontal */
+    background-color: rgb(73, 181, 214);
+    text-align: center; /* Isso alinhará o conteúdo dentro da div */
+    padding: 10px 10px;
+
+    
+}
+.declaration{
+
+    width: 80%; /* Defina a largura desejada */
+    height: 200px; /* Defina a altura desejada */
+}
+
+#comment-list li {
+    margin: 5px 5px 5px 10% ;
+    padding: 5px 5px 5px 5px;
+    list-style-type: none;
+    max-width: 80%; /* Defina o tamanho máximo desejado */
+    word-wrap: break-word; /* Permite que as palavras longas sejam quebradas e continuem em uma nova linha */
+    overflow: hidden; /* Oculta o conteúdo que ultrapassa o tamanho máximo */
+    position: relative; /* Define a posição relativa para que possamos adicionar um link dentro */
+}
+
+
+#comment-list li.expandable::after {
+    content: "Ver mais"; /* Texto do link para expandir */
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: white; /* Cor de fundo para cobrir o texto quando ele se sobrepõe ao conteúdo */
+    padding: 4px;
+    cursor: pointer;
+}
+
+#comment-list li.full {
+    max-height: none; /* Remove a restrição de altura para exibir o texto completo */
+}
+
+#declaration-list li {
+    margin-bottom: 10px; /* Adiciona margem inferior de 10 pixels */
+    padding: 5px; /* Adiciona preenchimento interno de 5 pixels */
+    color: #0f1c48;
+    background-color: aqua;
+  }
