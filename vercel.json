@@ -5,7 +5,7 @@
     [
        {
            "src":"server.js",
-           "use":""@now/node
+           "use":"@now/node"
        }
     ],
     "routes":
