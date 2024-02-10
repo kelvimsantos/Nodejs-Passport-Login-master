@@ -4,8 +4,8 @@
     "name": "kelvim",
     "email": "kelvim@hotmail.com",
     "password": "$2b$10$HxYW2dxaIymn.Sr5pLiyLOs0bsVJBp2o6mDUk2qPKN3eaxEOageEq",
-    "profileImagePath": "./views/data/download.png1707430769934.png",
-    "profileImageName": "download.png1707430769934.png",
+    "profileImagePath": "./views/data/CRIATURA4.jpg1707518551079.jpg",
+    "profileImageName": "CRIATURA4.jpg1707518551079.jpg",
     "coverImageName": "CAPA MUSEU3.jfif1707430802255.jfif",
     "coverImagePath": "./views/data/CAPA MUSEU3.jfif1707430802255.jfif",
     "declaracoes": [
@@ -75,5 +75,12 @@
     "profileImagePath": "./views/data/gif perfil3.gif1707428935017.gif",
     "coverImageName": "gif2 capa.gif1707428953478.gif",
     "coverImagePath": "./views/data/gif2 capa.gif1707428953478.gif"
+  },
+  {
+    "id": "1707518617084",
+    "name": "Filho do Eminem Perdido",
+    "email": "MM@us.com",
+    "password": "$2b$10$O0bYOSA5htpED/i1kNeSUOwKBSna0PTn0/2AsVJjfDhDBqC1XcZdK",
+    "declaracoes": []
   }
 ]
