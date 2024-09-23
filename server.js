@@ -63,9 +63,11 @@ app.use(express.static(__dirname + '/views'));
 app.use(express.urlencoded({ extended: false }));
 app.use(flash());
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  //secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'fallbackSecret', // fallback em caso de não encontrar a variável
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: { secure: true } // Se estiver usando HTTP. Para HTTPS, defina como true
 }));
 app.use(passport.initialize());
 app.use(passport.session());
