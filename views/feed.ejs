@@ -14,36 +14,61 @@
         <div class="profile">
             <!-- Informações do Perfil -->
             <div class="profile-info">
-                <img src="perfil.jpg" alt="Foto de Perfil">
+             
                  <!-- Adicionando foto de perfil -->
-        <form id="image-upload-form" action="/upload" method="post" enctype="multipart/form-data">
+       
             <img id="preview-image" class="preview-image" src="" alt="Imagem do Perfil">
-        </form>
-                <h2>Nome do Usuário</h2>
+        
+                <h2><%= user.name %></h2>
                 <h3>informações perfil</h3>
                 <!-- Outras informações do perfil, como status, número de amigos, etc. -->
                 <div>   <img class="left-image" src="esq.png" alt="Foto de dono"></div>
             </div>
 
-            
+            <div>
+                <!-- Formulário de busca de amigos -->
+                <form id="search-form">
+                    <input type="text" id="search-input" placeholder="Buscar por nome de usuário">
+                    <button type="submit" id="submitInvite">Buscar</button>
+                </form>
+                
+                <!-- Resultados da busca -->
+                <div id="search-results"></div>
+            </div>
         </div>
+        
+
         <!-- Linha Vertical -->
         <div class="vertical-line"></div>
         <!-- Feed de Publicações -->
         <div class="feed">
             <h1>Feed de Publicações</h1>
+            
             <!-- Lista de Publicações -->
             <div class="post">
                 <p>Conteúdo da Publicação...</p>
                 
-                <form id="declaration-form">
+                <form id="declaration-form" action="/adicionar-publicacao" method="post">
                     <!-- <label for="declaration">Publicar Declaração:</label>-->
-                    <textarea class="declaration" id="declaration" name="declaration"></textarea>
+                    <textarea class="declaration" id="declaration" name="conteudo"></textarea>
                     <br/>
                     <button type="submit">Publicar</button>
                 </form>
 
-                <div class="publicaçoe-feed"></div>
+                <div id="feed-container"></div>
+
+                <div class="publicaçoe-feed">
+                    <h2>Publicações</h2>
+                    <ul>
+                      <% publicacoes.forEach(publicacao => { %>
+                        <li>
+                          <strong><%= publicacao.autor %></strong>: <%= publicacao.conteudo %>
+                          <br><small><%= publicacao.data %></small>
+                        </li>
+                      <% }) %>
+                    </ul>
+
+                </div>
                 <!-- Botões de Curtir, Comentar, Compartilhar, etc. -->
 
             </div>
@@ -53,46 +78,26 @@
         <div class="sidebar">
             <div class="friends-communities">
                 <h3>Amigos</h3>
+
             <div class="friend-bloco">
                 <div class="friend-container">
-                    <!-- Foto dos Amigos -->
-                    <div class="friend">
-                        <img src="amigo1.jpg" alt="Foto do Amigo">
-                        <p>Nome do Amigo 1</p>
-                    </div>
-                    <div class="friend">
-                        <img src="amigo2.jpg" alt="Foto do Amigo">
-                        <p>Nome do Amigo 2</p>
-                    </div>
-                    <div class="friend">
-                        <img src="amigo3.jpg" alt="Foto do Amigo">
-                        <p>Nome do Amigo 3</p>
-                    </div>
-                    <div class="friend">
-                        <img src="amigo4.jpg" alt="Foto do Amigo">
-                        <p>Nome do Amigo 4</p>
-                    </div>
-                    <div class="friend">
-                        <img src="amigo5.jpg" alt="Foto do Amigo">
-                        <p>Nome do Amigo 5</p>
-                    </div>
-                    <div class="friend">
-                        <img src="amigo6.jpg" alt="Foto do Amigo">
-                        <p>Nome do Amigo 6</p>
-                    </div>
-                    <div class="friend">
-                        <img src="amigo7.jpg" alt="Foto do Amigo">
-                        <p>Nome do Amigo 7</p>
-                    </div>
-                    <div class="friend">
-                        <img src="amigo8.jpg" alt="Foto do Amigo">
-                        <p>Nome do Amigo 8</p>
-                    </div>
-                    <div class="friend">
-                        <img src="amigo9.jpg" alt="Foto do Amigo">
-                        <p>Nome do Amigo 9</p>
-                    </div>
+                    <% amigos.forEach(amigo => { %>
+                        <% if (amigo) { %>
+                          <div class="friend" data-id="<%= amigo.id %>" data-name="<%= amigo.name %>" data-email="<%= amigo.email %>" data-image="<%= amigo.profileImagePathNoView %>">
+                            <a href="/perfil/<%= amigo.id %>">
+                              <img src="<%= amigo.profileImagePathNoView %>" alt="Foto de perfil" width="30" height="30">
+                              <p><strong><%= amigo.name %></strong></p>
+                              <!--<p><strong><%= amigo.name %></strong> - <%= amigo.email %></p>-->
+                            </a>
+                          </div>
+                        <% } else { %>
+                          <div class="friend">
+                            <p>Amigo não encontrado</p>
+                          </div>
+                        <% } %>
+                      <% }) %>
                 </div>
+                <a href="/todos-amigos">Ver todos os amigos</a>
             </div>
                     <!-- Adicione mais amigos conforme necessário -->
             <div class="views/stylesFeed.css">
@@ -100,39 +105,39 @@
                 <div class="community-container">
                     <!-- Foto das Comunidades -->
                         <div class="community">
-                            <img src="comunidade1.jpg" alt="Foto da Comunidade">
+                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
                             <p>Nome da Comunidade 1</p>
                         </div>
                         <div class="community">
-                            <img src="comunidade2.jpg" alt="Foto da Comunidade">
+                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
                             <p>Nome da Comunidade 2</p>
                         </div>
                         <div class="community">
-                            <img src="comunidade3.jpg" alt="Foto da Comunidade">
+                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
                             <p>Nome da Comunidade 3</p>
                         </div>
                         <div class="community">
-                            <img src="comunidade4.jpg" alt="Foto da Comunidade">
+                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
                             <p>Nome da Comunidade 4</p>
                         </div>
                         <div class="community">
-                            <img src="comunidade5.jpg" alt="Foto da Comunidade">
+                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
                             <p>Nome da Comunidade 5</p>
                         </div>
                         <div class="community">
-                            <img src="comunidade6.jpg" alt="Foto da Comunidade">
+                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
                             <p>Nome da Comunidade 6</p>
                         </div>
                         <div class="community">
-                            <img src="comunidade7.jpg" alt="Foto da Comunidade">
+                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
                             <p>Nome da Comunidade 7</p>
                         </div>
                         <div class="community">
-                            <img src="comunidade8.jpg" alt="Foto da Comunidade">
+                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
                             <p>Nome da Comunidade 8</p>
                         </div>
                         <div class="community">
-                            <img src="comunidade9.jpg" alt="Foto da Comunidade">
+                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
                             <p>Nome da Comunidade 9</p>
                         </div>
                         <!-- Adicione mais comunidades conforme necessário -->

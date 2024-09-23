@@ -1,86 +1,287 @@
 [
   {
-    "id": "1707179113443",
-    "name": "kelvim",
-    "email": "kelvim@hotmail.com",
-    "password": "$2b$10$HxYW2dxaIymn.Sr5pLiyLOs0bsVJBp2o6mDUk2qPKN3eaxEOageEq",
-    "profileImagePath": "./views/data/CRIATURA4.jpg1707518551079.jpg",
-    "profileImageName": "CRIATURA4.jpg1707518551079.jpg",
-    "coverImageName": "CAPA MUSEU3.jfif1707430802255.jfif",
-    "coverImagePath": "./views/data/CAPA MUSEU3.jfif1707430802255.jfif",
+    "id": "1722791346394",
+    "name": "testando001",
+    "email": "testando001@mail",
+    "password": "$2b$10$DudLVx4R2bSEsv2FUHMYPOGcUyro7ywgL1TPAcXJM5tFHtt1.7tCu",
+    "profileImagePath": "./views/data/eminemGOD.gif1722562775621.gif1722805420765.gif",
+    "coverImagePath": "./views/data/eminem-lose-yourself.gif1722791471348.gif",
+    "profileImagePathNoView": "./data/eminemGOD.gif1722562775621.gif1722805420765.gif",
     "declaracoes": [
-      "Declaração 1",
-      "Declaração 2",
-      "Declaração 3",
-      "\nWhat is Lorem Ipsum?\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\nWhy do we use it?\nIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).\n\n",
-      "\nWhat is Lorem Ipsum?\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\nWhy do we use it?\nIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).\n\n",
-      "wefdwffsadf",
-      "wertewrewrta\\wwa3242345324534",
-      "sdfdgfszdrgs234bert6456 bdgsdgsrf sdasd asd as ad asdas das ",
-      "xcasdasdasd"
+      "declarações , dear pessoas!asdasdadadsad",
+      "sdfsdfsdfsdfsd",
+      "asdfsdgsdfg",
+      "sdfsdfsdfsdfsdfzxcvxcvx"
+    ],
+    "comentarios": [],
+    "amigos": [
+      "1722791366120",
+      "1722791346394"
+    ],
+    "profileImageName": "eminemGOD.gif1722562775621.gif1722805420765.gif",
+    "coverImageName": "eminem-lose-yourself.gif1722791471348.gif",
+    "publicacoes": [],
+    "publicacoesAmigos": []
+  },
+  {
+    "id": "1722791366120",
+    "name": "testando002",
+    "email": "testando002@mail",
+    "password": "$2b$10$.FC1VwMx1qj2uN0g5L9uGuh2Fnpimqs4lTqiKApcENhJuJAtthEmK",
+    "profileImagePath": "./views/data/AoLO.gif1722700537242.gif1722716719235.gif1722791601902.gif",
+    "coverImagePath": null,
+    "profileImagePathNoView": "./data/AoLO.gif1722700537242.gif1722716719235.gif1722791601902.gif",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [
+      "1722791346394"
+    ],
+    "profileImageName": "AoLO.gif1722700537242.gif1722716719235.gif1722791601902.gif",
+    "publicacoes": [],
+    "publicacoesAmigos": []
+  },
+  {
+    "id": "1722793830833",
+    "name": "testando003",
+    "email": "testando003@mail",
+    "password": "$2b$10$3/VPknAARvWh2nZ5vh7jtefisHdxrBnm9t/hVU9KnA1eyQjGYq0ca",
+    "profileImagePath": "/views/dir.jpg",
+    "coverImagePath": "/views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": []
+  },
+  {
+    "id": "1722794226671",
+    "name": "testando004",
+    "email": "testando004@mail",
+    "password": "$2b$10$nXdJGRykZAaBUEgMNbShce8STeEfse.2y8oWtYH.CNdWbPiRuK.4a",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": []
+  },
+  {
+    "id": "1722794256938",
+    "name": "testando005",
+    "email": "testando005@mail",
+    "password": "$2b$10$vN7A5/N2a2P0pV9ewH9T.ughLysKC8FV5NppKHyLG3NqZDtKJ2ZGO",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": []
+  },
+  {
+    "id": "1722794499875",
+    "name": "testando006",
+    "email": "testando006@mail",
+    "password": "$2b$10$9zXvDfNzgoUdan2Zda.a6O3dU0tFGQ4aYtJujhA.hUWA28ucV.hnS",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "./views/dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [
+      "1722793830833",
+      "1722794226671",
+      "1722794256938"
+    ],
+    "publicacoes": [],
+    "publicacoesAmigos": []
+  },
+  {
+    "id": "1722800914073",
+    "name": "testando007",
+    "email": "testando007@mail",
+    "password": "$2b$10$4lciV9caPBY3iT2DJhiw5umdbt8DqCP64GcbR2Unjd0VPXEGDvcNe",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": []
+  },
+  {
+    "id": "1722802870800",
+    "name": "testando008",
+    "email": "testando008@mail",
+    "password": "$2b$10$/MUnHp5Wa3/9oIOvGsuTiO7zhSXMCsRFTxCqDRcLGoDgoQTYZVT7y",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": []
+  },
+  {
+    "id": "1722807863610",
+    "name": "testando009",
+    "email": "testando009@mail",
+    "password": "$2b$10$ZftejrmA7MD7Hp4m6QKjbuWeGvstaigdGcLzV0G3SkJjt5VMdL16i",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [
+      "1722802870800"
+    ],
+    "publicacoes": [],
+    "publicacoesAmigos": []
+  },
+  {
+    "id": "1725200541385",
+    "name": "UserTeste",
+    "email": "user1@teste",
+    "password": "$2b$10$NWL7nLAZ3wCTb1WYbhzzY.rdLnGDl9XmCk/sqCgLJi3JckIjdnd4O",
+    "profileImagePath": "./views/data/twitter-fit-to-size_wfwzim.webp1725205645404.webp",
+    "coverImagePath": "./views/data/Twitter_GIF.gif1725205602665.gif",
+    "profileImagePathNoView": "./data/twitter-fit-to-size_wfwzim.webp1725205645404.webp",
+    "declaracoes": [
+      "testando meu relato 1",
+      "asdasdsadas"
+    ],
+    "comentarios": [],
+    "amigos": [
+      "1725200639001",
+      "1722807863610",
+      "1722791366120",
+      "1722791346394"
+    ],
+    "publicacoes": [],
+    "profileImageName": "twitter-fit-to-size_wfwzim.webp1725205645404.webp",
+    "coverImageName": "Twitter_GIF.gif1725205602665.gif",
+    "publicacoesAmigos": []
+  },
+  {
+    "id": "1725200639001",
+    "name": "kelvim",
+    "email": "teste@user",
+    "password": "$2b$10$8IdVwFOAgsyDQr.zRRVawO0qhbG9eBqXc6FqFE03apCH6.rCutTBG",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": []
+  },
+  {
+    "id": "1726851624640",
+    "name": "teste01",
+    "email": "teste01@teste.com",
+    "password": "$2b$10$mi7P.J1Fpc2qYmZYhd/Ae.NQK4bHEjRx6S90gf4vfVzMVLuVLW7iK",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": [
+      {
+        "id": "_uxge60kts",
+        "autor": "1726976436764",
+        "conteudo": "testando publicação amigo 1 123",
+        "data": "2024-09-22T15:28:45.205Z"
+      },
+      {
+        "id": "_uxge60ktq",
+        "autor": "1726976436764",
+        "conteudo": "testando publicação amigo 1 456",
+        "data": "2024-09-22T15:28:48.205Z"
+      }
     ]
   },
   {
-    "id": "1707405802010",
-    "name": "aaa",
-    "email": "aaa@aaa",
-    "password": "$2b$10$/aB22AjVDSK0OdNbXDcK5uoMQvM0ESICXo8dZ7Yo7N7LyLcCKtpue",
-    "declaracoes": [
-      "What is Lorem Ipsum?\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\nWhy do we use it?\nIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).\n\n"
+    "id": "1726897246711",
+    "name": "teste02",
+    "email": "teste02@teste.com",
+    "password": "$2b$10$NvV09xmoShAZY53jowSU4..ogpuQLJmUWxkd5SYJt89MAQ4Epeq9m",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [
+      "1726851624640"
     ],
-    "profileImageName": "disco1.jfif1707405962374.jfif",
-    "profileImagePath": "./views/data/disco1.jfif1707405962374.jfif"
+    "publicacoes": [],
+    "publicacoesAmigos": []
   },
   {
-    "id": "1707406267497",
-    "name": "max",
-    "email": "max@max",
-    "password": "$2b$10$bsDHm9pci/G9kOOWM7T.POSOiNJCCiyMrjCvB/4pdQs172jU8OKbC",
-    "declaracoes": [
-      " roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Fin",
-      "dfgdgdfgdfgdfg",
-      "42332452431345",
-      "qasdasdasdasd",
-      "asdasdasdasdasdasd",
-      "sdfghhsdfsafd12'123123214",
-      "sfdfsdsfdsfd",
-      "sdfsdfggdfefsfs",
-      "sdddddddddddddddddddddddddddddddddddddddd"
-    ],
-    "profileImageName": "CRIATURA2.jfif1707425272097.jfif",
-    "profileImagePath": "./views/data/CRIATURA2.jfif1707425272097.jfif"
+    "id": "1726899206104",
+    "name": "teste3",
+    "email": "teste3@teste.com",
+    "password": "$2b$10$ROk7gOpfUd9evqP21m9oeumcpf4Jvi8uHkfAbc0WUh66NVajlIHUy",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": []
   },
   {
-    "id": "1707425706715",
-    "name": "Filho do Eminem Perdido",
-    "email": "M@M",
-    "password": "$2b$10$cGDFHySDMr4eUh3RRKGGW.ZNAQmJrt.FnYGeouXOqjf77wgnnv3qW",
-    "declaracoes": [
-      "uasduisaduisdauiasdi"
-    ],
-    "profileImageName": "MUSEU CAPA.jfif1707426287277.jfif",
-    "profileImagePath": "./views/data/MUSEU CAPA.jfif1707426287277.jfif",
-    "coverImageName": "download.png1707426727036.png",
-    "coverImagePath": "./views/data/download.png1707426727036.png"
+    "id": "1726899635503",
+    "name": "teste4",
+    "email": "teste4@teste.com",
+    "password": "$2b$10$l598.k3yEi.aUegtBHIN6u9GFo4jIzDbIPSvr/5vqwz675UR2z.xO",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": []
   },
   {
-    "id": "1707428910781",
-    "name": "personagem",
-    "email": "mm@mm",
-    "password": "$2b$10$bU/mX2zrr7NiTRWE22lzYeQPUQ4Vt48dshGohi0teUixkxazziX.G",
-    "declaracoes": [
-      "\nWhat is Lorem Ipsum?\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\nWhy do we use it?\nIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the l"
+    "id": "1726976436764",
+    "name": "teste05",
+    "email": "teste05@teste.com",
+    "password": "$2b$10$vU2KLJTXz8Y0JF0dTlMmU.HqIwrRnEdpAIb9rEgrKreK1LE3ks3ym",
+    "profileImagePath": "./views/data/earth_ojz5htc6.gif1727024043682.gif",
+    "coverImagePath": "./views/data/angry-wizard-evil-spirits-holds-260nw-1450052381.webp1727024082156.webp",
+    "profileImagePathNoView": "./data/earth_ojz5htc6.gif1727024043682.gif",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [
+      "1726851624640"
     ],
-    "profileImageName": "gif perfil3.gif1707428935017.gif",
-    "profileImagePath": "./views/data/gif perfil3.gif1707428935017.gif",
-    "coverImageName": "gif2 capa.gif1707428953478.gif",
-    "coverImagePath": "./views/data/gif2 capa.gif1707428953478.gif"
-  },
-  {
-    "id": "1707518617084",
-    "name": "Filho do Eminem Perdido",
-    "email": "MM@us.com",
-    "password": "$2b$10$O0bYOSA5htpED/i1kNeSUOwKBSna0PTn0/2AsVJjfDhDBqC1XcZdK",
-    "declaracoes": []
+    "publicacoes": [
+      {
+        "id": "_uxge60ktt",
+        "autor": "1726976436764",
+        "conteudo": "testando publicação 123",
+        "data": "2024-09-22T15:28:47.205Z"
+      },
+      {
+        "id": "_ikdmh7xjl",
+        "autor": "1726976436764",
+        "conteudo": "Pessoal vão no meu perfil conferir a nova declaração sobre um ovni que foi avistado aqui.",
+        "data": "2024-09-22T16:01:07.319Z"
+      }
+    ],
+    "publicacoesAmigos": [],
+    "profileImageName": "earth_ojz5htc6.gif1727024043682.gif",
+    "coverImageName": "angry-wizard-evil-spirits-holds-260nw-1450052381.webp1727024082156.webp"
   }
 ]

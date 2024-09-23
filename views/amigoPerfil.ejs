@@ -1,0 +1,38 @@
+<!-- views/amigoPerfil.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Perfil do Amigo</title>
+</head>
+<body>
+  <h1>Perfil de <%= amigo.name %></h1>
+  
+  <img id="profileImage" src="<%= amigo.profileImagePath %>?nocache=<%= Date.now() %>" alt="Profile Image">
+
+  <h2><%= amigo.name %></h2>
+  <button id="amigoButton" onclick="toggleAmizade('<%= amigo.id %>')">
+    <%= user.amigos && user.amigos.includes(amigo.id) ? 'Remover Amigo' : 'Adicionar Amigo' %>
+  </button>
+
+  <script>
+    function toggleAmizade(friendId) {
+      const isAmigo = <%= user.amigos && user.amigos.includes(amigo.id) %>;
+      const url = isAmigo ? '/remover-amigo' : '/adicionar-amigo';
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ friendId: friendId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.message);
+        window.location.reload();
+      })
+      .catch(error => console.error('Erro ao atualizar amizade:', error));
+    }
+  </script>
+</body>
+</html>

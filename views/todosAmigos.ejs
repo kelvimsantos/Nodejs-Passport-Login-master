@@ -1,0 +1,19 @@
+<!-- todosAmigos.ejs -->
+<div class="sidebar">
+    <div class="friends-communities">
+      <h3>Todos os Amigos</h3>
+      <div class="friend-bloco">
+        <div class="friend-container">
+          <% amigos.forEach(amigo => { %>
+            <div class="friend">
+              <a href="/perfil/<%= amigo.id %>">
+                <img src="<%= amigo.profileImagePath %>?nocache=<%= Date.now() %>" alt="Foto do Amigo">
+                <p><%= amigo.name %></p>
+              </a>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+  

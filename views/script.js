@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Referências aos elementos do DOM
+
+
     const profileImageInput = document.getElementById('profile-image');
     const previewImage = document.getElementById('preview-image');
     const coverImageInput = document.getElementById('cover-image');
@@ -13,6 +14,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const commentInput = document.getElementById('comment');
     const commentList = document.getElementById('comment-list');
     const salvarUsuarioButton = document.getElementById('salvarUsuario');
+
+    //feed
+    const nomeUsuarioSpan = document.getElementById('nomeUsuario'); // Adicionado para exibir o nome do usuário
+   const imagemUsuarioFeed = document.getElementById('preview-image'); // Adicionado para exibir a imagem do usuário
    
     // Faça uma requisição AJAX para obter os dados do usuário
     fetch('/dados-usuario')
@@ -33,9 +38,12 @@ document.addEventListener('DOMContentLoaded', function () {
         var imagemUsuario = document.getElementById('preview-image');
         // Define o caminho da imagem do perfil
         // Define o caminho da imagem do perfil apenas se existir
-if (dadosUsuario.profileImagePath) {
-    imagemUsuario.src = dadosUsuario.profileImagePath.replace(/^\.\/views\//, ''); 
-}
+        if (dadosUsuario.profileImagePath) {
+            imagemUsuario.src = dadosUsuario.profileImagePath.replace(/^\.\/views\//, ''); 
+            console.log('Caminho da imagem do perfil:', dadosUsuario.profileImagePath);
+            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            imagemUsuarioFeed.src = dadosUsuario.profileImagePath.replace(/^\.\/views\//, '');
+            }
         // Pega o elemento img da capa pelo id
         var imagemCapa = document.getElementById('preview-cover-image');
         // Define o caminho da imagem da capa, se existir
@@ -65,9 +73,15 @@ if (dadosUsuario.profileImagePath) {
     })
     .catch(error => console.error('Erro ao obter dados do usuário:', error));
       
-   
+   // Referências aos elementos do DOM
+   document.getElementById('search-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Impede o comportamento padrão de submissão do formulário
+    console.log('Botão de busca clicado!');
+    const friendId = document.getElementById('search-input').value; // Obtém o ID do amigo
+    enviarSolicitacaoAmizade(friendId);
+});
     
-
+    carregarInformacoesDoUsuario();
 
     // Função para exibir a imagem selecionada no elemento de visualização
     function previewImagem(inputElement, previewElement) {
@@ -142,42 +156,9 @@ if (dadosUsuario.profileImagePath) {
     // Adicione mais lógica conforme necessário
 
 
+
 });
 
-
-
-
-// Adicione um listener ao botão
-//document.getElementById('salvarPerfil').addEventListener('click', function () {
-//    // Pegue o caminho da imagem
-//    var profileImageInput = document.getElementById('profile-image');
-//    var profileImagePath = profileImageInput ? profileImageInput.value : null;
-//
-//    // Verifique se o elemento foi encontrado antes de tentar acessar a propriedade 'value'
-//    if (profileImagePath !== null) {
-//        // Faça alguma lógica com o caminho da imagem
-//        console.log('Profile Image Path:', profileImagePath);
-//
-//        // Exemplo de como você pode usar fetch para enviar dados para o servidor
-//        fetch('/salvarPerfil', {
-//            method: 'POST',
-//            headers: {
-//                'Content-Type': 'application/json'
-//            },
-//            body: JSON.stringify({ profileImagePath: profileImagePath })
-//        })
-//        .then(response => response.json())
-//        .then(data => {
-//            // Faça algo com a resposta do servidor, se necessário
-//            console.log('Resposta do servidor:', data);
-//        })
-//        .catch(error => {
-//            console.error('Erro ao enviar dados para o servidor:', error);
-//        });
-//    } else {
-//        console.error('Elemento de imagem de perfil não encontrado no DOM.');
-//    }
-//});
 
 
 //salvar imagem sem redirecionar pagina
@@ -197,16 +178,13 @@ document.getElementById('update-profile-image').addEventListener('click', functi
     .then(response => response.json())
     .then(data => {
         console.log(data.message); // Exiba a mensagem de sucesso no console
+
         // Atualize a imagem na página, se necessário
+        window.location.reload();
         // Exemplo: document.getElementById('preview-image').src = novoCaminhoDaImagem;
     })
     .catch(error => console.error('Erro ao enviar imagem:', error));
 });
-
-
-
-
-
 
 
 //salvar imagem sem redirecionar pagina
@@ -231,11 +209,7 @@ document.getElementById('update-cover-image').addEventListener('click', function
     .catch(error => console.error('Erro ao enviar imagem:', error));
 });
 
-
-
-
-
-
+//declaracao publicação
 const declarationForm = document.getElementById('declaration-form');
 const declarationTextarea = document.getElementById('declaration');
 const declarationList = document.getElementById('declaration-list');
@@ -274,32 +248,199 @@ declarationForm.addEventListener('submit', function (event) {
 });
 
 
+//=======================================================================
 
-
-// Endpoint para salvar informações do usuário (por exemplo, nome, email, etc.)
-app.post("/save-user-info", (req, res) => {
-    const userId = req.user.id;
-    const { name, email, profileImagePath,coverImagePath,declaracoes} = req.body;
-  
-    // Encontre o usuário correspondente com base no ID
-    const currentUser = users.find(user => user.id === userId);
-  
-    // Atualize as informações do usuário
-    currentUser.name = name;
-    currentUser.email = email;
-    currentUser.profileImagePath = profileImagePath;
-    currentUser.coverImagePath = coverImagePath;
-    currentUser.declaracoes = declaracoes;
-
-  
-    // Salve os dados atualizados no arquivo JSON
-    saveUsersToFile(users);
-  
-    // Envie uma resposta adequada (por exemplo, JSON com mensagem de sucesso)
-    res.json({ message: "Informações do usuário atualizadas com sucesso." });
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/dados-publicacoes')
+      .then(response => response.json())
+      .then(publicacoes => {
+        const feedContainer = document.getElementById('feed-container');
+        feedContainer.innerHTML = publicacoes.map(pub => `
+          <div class="publicacao">
+            <p>ID: ${pub.id}</p>
+            <p>Autor ID: ${pub.autorId}</p>
+            <p>Conteúdo: ${pub.conteudo}</p>
+            <p>Data: ${new Date(pub.data).toLocaleString()}</p>
+          </div>
+        `).join('');
+      })
+      .catch(error => console.error('Erro ao carregar publicações:', error));
   });
+
+
+async function adicionarPublicacao(conteudo) {
+    try {
+        const response = await fetch('/adicionar-publicacao', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                usuarioId: 1,  // Substitua pelo ID do usuário atual
+                conteudo: conteudo
+            })
+        });
+        const novaPublicacao = await response.json();
+        console.log('Publicação adicionada:', novaPublicacao);
+        // Atualize a interface do usuário com a nova publicação
+    } catch (error) {
+        console.error('Erro ao adicionar publicação:', error);
+    }
+}
+
+async function carregarPublicacoes() {
+    try {
+        const response = await fetch('/publicacoes');
+        const publicacoes = await response.json();
+        console.log(publicacoes);
+        // Atualize a interface do usuário com as publicações
+    } catch (error) {
+        console.error('Erro ao carregar publicações:', error);
+    }
+}
+//=============================================================================
+// Endpoint para salvar informações do usuário (por exemplo, nome, email, etc.)
+//app.post("/save-user-info", (req, res) => {
+//    const userId = req.user.id;
+//    const { name, email, profileImagePath,coverImagePath,declaracoes,comentarios,profileImagePathNoView,publicacoes} = req.body;
+//  
+//    // Encontre o usuário correspondente com base no ID
+//    const currentUser = users.find(user => user.id === userId);
+//  
+//    // Atualize as informações do usuário
+//    currentUser.name = name;
+//    currentUser.email = email;
+//    currentUser.profileImagePath = profileImagePath;
+//    currentUser.coverImagePath = coverImagePath;
+//    currentUser.profileImagePathNoView =profileImagePathNoView;
+//    currentUser.declaracoes = declaracoes;
+//    currentUser.comentarios = comentarios;
+//    currentUser.publicacoes = publicacoes;
+//
+//    // Salve os dados atualizados no arquivo JSON
+//    saveUsersToFile(users);
+//  
+//    // Envie uma resposta adequada (por exemplo, JSON com mensagem de sucesso)
+//    res.json({ message: "Informações do usuário atualizadas com sucesso." });
+//  });
   
   // Função para salvar usuários no arquivo JSON
   function saveUsersToFile(users) {
     fs.writeFileSync('users.json', JSON.stringify(users, null, 2), 'utf-8');
   }
+
+
+
+  // Função para carregar as informações do usuário para qualquer pagina ue ele for 
+function carregarInformacoesDoUsuario() {
+    fetch('/dados-usuario')
+    .then(response => response.json())
+    .then(dadosUsuario => {
+        // Faça algo com os dados do usuário
+        console.log(dadosUsuario.nome);
+        console.log(dadosUsuario.email);
+    
+        // Outras lógicas do script aqui
+    
+        // Pega o elemento span pelo id
+   //     var nomeUsuarioSpan = document.getElementById('nomeUsuario');
+        // Define o valor do nome do usuário no span
+  //      nomeUsuarioSpan.textContent = dadosUsuario.nome;
+  console.log("00000000000000000000000000000000000000000000000000000000000000000000000");
+        // Pega o elemento img pelo id
+        var imagemUsuario = document.getElementById('preview-image');
+        // Define o caminho da imagem do perfil
+        if (dadosUsuario.profileImagePath) {
+            console.log("111111111111111111111111111111111111111111111111111111111111");
+            imagemUsuario.src = dadosUsuario.profileImagePath.replace(/^\.\/views\//, ''); 
+            console.log("222222222222222222222222222222222222222222222222222222222222");
+            console.log(dadosUsuario.profileImagePath.replace(/^\.\/views\//, ''));
+            console.log("3333333333333333333333333333333333333333333333333333333333333");
+        }
+    })
+    .catch(error => console.error('Erro ao obter dados do usuário:', error));
+}
+
+// Chama a função para carregar as informações do usuário quando a página do feed for carregada
+window.addEventListener('load', function() {
+    //carregarInformacoesDoUsuario();
+});
+
+
+
+//adicionar amigo ----------------------------------
+//botao 
+// Botão de envio
+document.getElementById('search-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const email = document.getElementById('search-input').value;
+    
+    fetch('/buscar-usuario', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email: email })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        document.getElementById('search-results').innerHTML = '<p>' + data.error + '</p>';
+      } else {
+        window.location.href = '/perfil/' + data.id;
+      }
+    })
+    .catch(error => console.error('Erro ao buscar usuário:', error));
+  });
+
+
+  
+  function enviarSolicitacaoAmizade(friendId) {
+    fetch('/adicionar-amigo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ friendId: friendId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.message);
+      document.getElementById('search-results').innerHTML = '<p>' + data.message + '</p>';
+    })
+    .catch(error => console.error('Erro ao enviar solicitação de amizade:', error));
+  }
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+  fetch('/dados-amigos')
+    .then(response => response.json())
+    .then(data => {
+      const amigos = data.amigos;
+      const friendContainer = document.querySelector('.friend-container');
+      friendContainer.innerHTML = ''; // Limpa o container antes de adicionar os amigos
+      const maxLength = 11; // Defina o número máximo de caracteres aqui
+      const friends = document.querySelectorAll('.friend');
+
+      amigos.forEach(amigo => {
+        const friendDiv = document.createElement('div');
+        friendDiv.classList.add('friend');
+        friendDiv.innerHTML = `
+          <a href="/perfil/${amigo.id}">
+            <img src="${amigo.profileImagePath}" alt="Foto de perfil" width="50" height="50">
+            <p><strong>${amigo.name}</strong> - ${amigo.email}</p>
+          </a>
+        `;
+        friendContainer.appendChild(friendDiv);
+      });
+
+      friends.forEach(friend => {
+        const nameElement = friend.querySelector('p strong');
+        const name = nameElement.textContent;
+
+        if (name.length > maxLength) {
+            nameElement.textContent = name.substring(0, maxLength) + '...';
+        }
+    });
+    });
+});
