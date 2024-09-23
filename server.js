@@ -867,4 +867,9 @@ app.get("/todos-amigos", ensureAuthenticated, (req, res) => {
 
 
 
-app.listen(3000);
+//app.listen(3000);
+
+const PORT = process.env.PORT || 3000; // Usa a porta definida pelo Render ou 3000 como padrão
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
