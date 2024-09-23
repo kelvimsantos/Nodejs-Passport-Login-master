@@ -67,7 +67,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'fallbackSecret', // fallback em caso de não encontrar a variável
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: true } // Se estiver usando HTTP. Para HTTPS, defina como true
+  cookie: { secure: false } // Se estiver usando HTTP. Para HTTPS, defina como true
 }));
 app.use(passport.initialize());
 app.use(passport.session());
