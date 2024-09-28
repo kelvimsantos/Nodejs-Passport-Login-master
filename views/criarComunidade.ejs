@@ -1,0 +1,48 @@
+<form id="communityForm" action="/salvar-comunidade" method="POST" enctype="multipart/form-data">
+    <label for="nome">Nome da Comunidade:</label>
+    <input type="text" id="nome" name="nome" required>
+    
+    <label for="imagemPerfil">Imagem de Perfil:</label>
+    <input type="file" id="imagemPerfil" name="imagemPerfil" accept="image/*">
+    
+    <button type="submit">Salvar Comunidade</button>
+</form>
+
+
+<script>
+    document.getElementById("communityForm").addEventListener("submit", function(event) {
+        const imagemInput = document.getElementById("imagemPerfil");
+        const file = imagemInput.files[0];
+        
+        if (!file) {
+            alert("Por favor, selecione uma imagem.");
+            event.preventDefault();
+            return;
+        }
+    
+        const img = new Image();
+        img.src = URL.createObjectURL(file); // Cria um objeto URL para a imagem
+    
+        img.onload = function() {
+            const width = img.width;
+            const height = img.height;
+            const aspectRatio = width / height;
+    
+            // Defina a proporção máxima e mínima que considera aceitável
+            const minAspectRatio = 0.75; // Largura/Altura mínima aceitável
+            const maxAspectRatio = 1.33; // Largura/Altura máxima aceitável
+    
+            if (aspectRatio < minAspectRatio || aspectRatio > maxAspectRatio) {
+                alert("A imagem está desproporcional. Por favor, envie uma imagem com proporções adequadas.");
+                event.preventDefault(); // Impede o envio do formulário
+            } else {
+                console.log("Proporção da imagem válida. Formulário enviado.");
+                // Aqui o formulário será enviado normalmente
+                document.getElementById("communityForm").submit();
+            }
+        };
+    
+        // Garante que o envio seja interrompido até que a imagem seja carregada e validada
+        event.preventDefault(); 
+    });
+    </script>

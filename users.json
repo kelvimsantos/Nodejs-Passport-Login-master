@@ -283,5 +283,169 @@
     "publicacoesAmigos": [],
     "profileImageName": "earth_ojz5htc6.gif1727024043682.gif",
     "coverImageName": "angry-wizard-evil-spirits-holds-260nw-1450052381.webp1727024082156.webp"
+  },
+  {
+    "id": "1727226365833",
+    "name": "teste06",
+    "email": "teste06@06.com",
+    "password": "$2b$10$g2HjMe743QkI9s/gr3Xt1.hkoP/dShUb1kVXtfdMEDLb2AYo5fHWm",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": []
+  },
+  {
+    "id": "1727226924800",
+    "name": "teste08",
+    "email": "teste08@08.com",
+    "password": "$2b$10$2YB3rb4nZq95fVjqad7KyuwLOmDstllGox51ZYiA22R6abaFkfVJm",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": [],
+    "comunidades": [
+      "comunidade2"
+    ],
+    "comunidadesDono": [
+      "comunidade2"
+    ]
+  },
+  {
+    "id": "1727310764911",
+    "name": "teste09",
+    "email": "teste09@09.com",
+    "password": "$2b$10$dLZnjhkNNrxZtWIVVZoKq.umhrikYc0jQiu2UqAUc371/cLt6h0xu",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [
+      "1727226924800"
+    ],
+    "publicacoes": [],
+    "publicacoesAmigos": [],
+    "comunidades": [
+      "comunidade3",
+      "comunidade4",
+      "comunidade5",
+      "comunidade6",
+      "comunidade7",
+      "comunidade8"
+    ],
+    "comunidadesDono": [
+      "comunidade3",
+      "comunidade4",
+      "comunidade5",
+      "comunidade6",
+      "comunidade7",
+      "comunidade8"
+    ]
+  },
+  {
+    "id": "1727373282153",
+    "name": "conta1",
+    "email": "conta1@conta.com",
+    "password": "$2b$10$S3W7bEEUR/iYM.vlTE9CSuQG0AA2UHwCcYaJGexd6HxoxEjjXHYGK",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": [],
+    "comunidades": [
+      "comunidade9"
+    ],
+    "comunidadesDono": [
+      "comunidade9"
+    ]
+  },
+  {
+    "id": "1727388700700",
+    "name": "usuario1",
+    "email": "usuario1@user.com",
+    "password": "$2b$10$lokq7TNKPONKw57wKAVC8eprDMMGQfp9oHGDZ7mFP88ulazJhPLFq",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [
+      "1727226924800",
+      "1727310764911",
+      "1727226365833",
+      "1726851624640",
+      "1726899635503",
+      "1726899206104",
+      "1726897246711",
+      "1725200639001",
+      "1725200541385",
+      "1722807863610"
+    ],
+    "publicacoes": [],
+    "publicacoesAmigos": [],
+    "comunidades": [
+      "comunidade10",
+      "comunidade11",
+      "comunidade12",
+      "comunidade13"
+    ],
+    "comunidadesDono": [
+      "comunidade10",
+      "comunidade11",
+      "comunidade12",
+      "comunidade13"
+    ]
+  },
+  {
+    "id": "1727396066699",
+    "name": "usuario2",
+    "email": "usuario2@user.com",
+    "password": "$2b$10$od1h0BYpY9709iduEOiPkeBlfBlnXcaJZGC7Wh9e5/fn4zPAAfMfi",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": [],
+    "comunidades": [
+      "comunidade14",
+      "comunidade15"
+    ],
+    "comunidadesDono": [
+      "comunidade14",
+      "comunidade15"
+    ]
+  },
+  {
+    "id": "1727505280929",
+    "name": "usuario3",
+    "email": "usuario3@user.com",
+    "password": "$2b$10$rVOHuuL5i0clB7oapgXWd.B5QTZf2pxVCb1Yv3cSz7lWVzi04yivK",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [],
+    "publicacoesAmigos": [],
+    "comunidades": [
+      "comunidade2",
+      "comunidade15"
+    ],
+    "comunidadesDono": []
   }
 ]

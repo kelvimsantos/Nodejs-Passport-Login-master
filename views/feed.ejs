@@ -100,52 +100,52 @@
                 <a href="/todos-amigos">Ver todos os amigos</a>
             </div>
                     <!-- Adicione mais amigos conforme necessário -->
+
             <div class="views/stylesFeed.css">
+               <!-- Comunidades -->
                 <h3>Comunidades</h3>
                 <div class="community-container">
-                    <!-- Foto das Comunidades -->
-                        <div class="community">
-                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
-                            <p>Nome da Comunidade 1</p>
-                        </div>
-                        <div class="community">
-                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
-                            <p>Nome da Comunidade 2</p>
-                        </div>
-                        <div class="community">
-                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
-                            <p>Nome da Comunidade 3</p>
-                        </div>
-                        <div class="community">
-                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
-                            <p>Nome da Comunidade 4</p>
-                        </div>
-                        <div class="community">
-                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
-                            <p>Nome da Comunidade 5</p>
-                        </div>
-                        <div class="community">
-                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
-                            <p>Nome da Comunidade 6</p>
-                        </div>
-                        <div class="community">
-                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
-                            <p>Nome da Comunidade 7</p>
-                        </div>
-                        <div class="community">
-                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
-                            <p>Nome da Comunidade 8</p>
-                        </div>
-                        <div class="community">
-                            <img src="eminemGOD.gif" alt="Foto da Comunidade">
-                            <p>Nome da Comunidade 9</p>
-                        </div>
-                        <!-- Adicione mais comunidades conforme necessário -->
-                    </div>
+                    <h2>Comunidades</h2>
+                    
+                    <ul class="community-grid">
+                      <% for (let i = 0; i < 9; i++) { %>
+                        <li class="community">
+                          <% if (comunidades[i]) { %>
+                            <a href="/comunidade/<%= comunidades[i].id %>">
+                              <img src="<%= comunidades[i].imagemPerfil.replace(/^\.\/views\//, '') %>" alt="<%= comunidades[i].nome %>">
+                              <p><%= comunidades[i].nome %></p>
+                            </a>
+                          <% } else { %>
+                            <img src="./QWsX.gif" alt="Comunidade Vazia">
+                            <p>Comunidade Vazia</p>
+                          <% } %>
+                        </li>
+                      <% } %>
+                    </ul>
+                
+                    <!-- Link para criar nova comunidade -->
+                    <a href="/criar-comunidade">Criar Nova Comunidade</a>
                 </div>
             </div>
             <div class="right-div"> <img class="right-image"  src="eminemGOD.gif" alt="Foto de dono"></div>
         </div>
+
+        <h1>Procurar e Aderir à Comunidade</h1>
+  
+        <form action="/procurar-comunidade" method="GET">
+          <label for="nome">Nome da Comunidade:</label>
+          <input type="text" id="nome" name="nome" required>
+          
+          <!-- ID do usuário como campo oculto -->
+          <input type="hidden" name="usuarioId" value="<%= user.id %>">
+          
+          <button type="submit">Procurar e Aderir</button>
+          
+        </form>
+      <!-- Aqui pode ser onde os resultados da busca vão aparecer -->
+   <!-- Resultados da busca de comunidades -->
+
+
     </div>
 </body>
 </html>

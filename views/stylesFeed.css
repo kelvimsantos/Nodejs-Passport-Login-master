@@ -160,20 +160,78 @@
     grid-gap: 10px; /* Adiciona um espaço entre os itens */
    
 }
+/* Container de comunidades */
 .community-container {
-    margin: 20% auto; /* Margem superior de 20% e margens laterais automáticas */
-    align-items: center;
-    margin-top: 20px;
-    display: grid;
-    grid-template-columns: repeat(3, 7fr);
-    grid-gap: 30px;
-    width: 80%; /* Defina a largura desejada do container */
-    max-width: 1200px; /* Defina uma largura máxima se desejar */
-    height: auto;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 1200px; /* Limita a largura máxima */
+    padding: 10px;
+    box-sizing: border-box; /* Garante que o padding seja considerado na largura total */
 }
 
-.friend,
+/* Grid responsivo para as comunidades */
+.community-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas para telas grandes */
+    gap: 20px; /* Espaço entre os itens */
+    list-style: none;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Definir tamanhos responsivos */
 .community {
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    height: 150px; /* Defina uma altura fixa */
+    display: flex; /* Habilita flexbox para o conteúdo interno */
+    flex-direction: column; /* Organiza o conteúdo em coluna */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+     margin: 5px; /* Margem consistente */
+    
+}
+
+.community img {
+    width: 100px; /* Mantém a proporção */
+    max-width: 80%; /* Define uma largura máxima */
+    max-height: 80%; /* Define uma altura máxima para evitar achatamento */
+    height: auto;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid #ccc;
+    clip-path: circle(50% at 50% 50%); /* Corta a imagem para garantir que seja perfeitamente circular */
+    display: block;          /* Garante que a imagem não tenha comportamento inesperado em relação ao texto */
+    overflow: hidden;
+    object-position: center;  
+}
+
+@media (max-width: 1024px) {
+    .community-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas para tablets */
+    }
+
+    .community img {
+        max-width: 80px; /* Reduz o tamanho da imagem em telas menores */
+    }
+}
+
+@media (max-width: 768px) {
+    .community-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas para telas médias */
+    }
+}
+
+
+  
+.community p {
+    font-size: 14px;
+    margin: 0;
+}
+.friend {
     text-align: center;
     margin: 5px;
     width: 100%;
@@ -188,12 +246,7 @@
     border: 2px solid #ccc; /* Adiciona uma borda */
 }
 
-.community img {
-    width: 60%; /* Largura maior para as imagens das comunidades */
-    height: 40%; /* Altura menor para as imagens das comunidades */
-    margin-bottom: 4px;
-    border: 2px solid #ccc; /* Adiciona uma borda */
-}
+
 .friend{
     
     width: 40%;
@@ -204,19 +257,9 @@
 }
 
 
-
-.community {
-    
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 5px;
-    width: 90%;
-    height: auto;
-
-}
-
-.friends-list li,
-.communities-list li {
+.friends-list li
+/*.communities-list li*/
+ {
     margin-bottom: 10px;
 }
 /*formulario buscar amigo*/

@@ -1,0 +1,174 @@
+{
+  "comunidades": [
+    {
+      "id": "comunidade2",
+      "donoId": "1727226924800",
+      "nome": "grupoZap",
+      "membros": [
+        "1727226924800",
+        "1727396066699",
+        "1727505280929"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "/uploads/FEBIXPjXIAgTeuO.jfif1727232391736.jfif",
+      "feed": []
+    },
+    {
+      "id": "comunidade3",
+      "donoId": "1727310764911",
+      "nome": "teste2-comuna",
+      "membros": [
+        "1727310764911",
+        "1727396066699"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "/uploads/earth_ojz5htc6.gif1727311189781.gif",
+      "feed": []
+    },
+    {
+      "id": "comunidade4",
+      "donoId": "1727310764911",
+      "nome": "dasasdasd",
+      "membros": [
+        "1727310764911"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "/uploads/earth_ojz5htc6.gif1727312598909.gif",
+      "feed": []
+    },
+    {
+      "id": "comunidade5",
+      "donoId": "1727310764911",
+      "nome": "teste4",
+      "membros": [
+        "1727310764911",
+        "1727396066699"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/comunidades/undefined",
+      "imagemPerfilNoView": "/data/comunidades/undefined",
+      "feed": []
+    },
+    {
+      "id": "comunidade6",
+      "donoId": "1727310764911",
+      "nome": "teste5",
+      "membros": [
+        "1727310764911"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/dir.jpg",
+      "imagemPerfilNoView": "./views/dir.jpg",
+      "feed": []
+    },
+    {
+      "id": "comunidade7",
+      "donoId": "1727310764911",
+      "nome": "123123",
+      "membros": [
+        "1727310764911"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/comunidades/undefined",
+      "imagemPerfilNoView": "/data/comunidades/undefined",
+      "feed": []
+    },
+    {
+      "id": "comunidade8",
+      "donoId": "1727310764911",
+      "nome": "6767",
+      "membros": [
+        "1727310764911"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/comunidades/earth_ojz5htc6.gif1727320435690.gif",
+      "imagemPerfilNoView": "/data/comunidades/earth_ojz5htc6.gif1727320435690.gif",
+      "feed": []
+    },
+    {
+      "id": "comunidade9",
+      "donoId": "1727373282153",
+      "nome": "comunas",
+      "membros": [
+        "1727373282153"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/comunidades/giphy.gif1727373336894.gif",
+      "imagemPerfilNoView": "/data/comunidades/giphy.gif1727373336894.gif",
+      "feed": []
+    },
+    {
+      "id": "comunidade10",
+      "donoId": "1727388700700",
+      "nome": "teste1",
+      "membros": [
+        "1727388700700"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/comunidades/giphy.gif1727389546734.gif",
+      "imagemPerfilNoView": "/data/comunidades/giphy.gif1727389546734.gif",
+      "feed": []
+    },
+    {
+      "id": "comunidade11",
+      "donoId": "1727388700700",
+      "nome": "2",
+      "membros": [
+        "1727388700700"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/comunidades/giphy.gif1727390879352.gif",
+      "imagemPerfilNoView": "/data/comunidades/giphy.gif1727390879352.gif",
+      "feed": []
+    },
+    {
+      "id": "comunidade12",
+      "donoId": "1727388700700",
+      "nome": "3",
+      "membros": [
+        "1727388700700"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/comunidades/earth_ojz5htc6.gif1727390890035.gif",
+      "imagemPerfilNoView": "/data/comunidades/earth_ojz5htc6.gif1727390890035.gif",
+      "feed": []
+    },
+    {
+      "id": "comunidade13",
+      "donoId": "1727388700700",
+      "nome": "3",
+      "membros": [
+        "1727388700700"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/comunidades/giphy.gif1727390903829.gif",
+      "imagemPerfilNoView": "/data/comunidades/giphy.gif1727390903829.gif",
+      "feed": []
+    },
+    {
+      "id": "comunidade14",
+      "donoId": "1727396066699",
+      "nome": "ComunaCast",
+      "membros": [
+        "1727396066699"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/comunidades/552ac69ce628e48fe542a628190b42f5.jpg1727396147073.jpg",
+      "imagemPerfilNoView": "/data/comunidades/552ac69ce628e48fe542a628190b42f5.jpg1727396147073.jpg",
+      "feed": []
+    },
+    {
+      "id": "comunidade15",
+      "donoId": "1727396066699",
+      "nome": "grupinho",
+      "membros": [
+        "1727396066699",
+        "1727505280929"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/comunidades/32432b346363e05ddc51b73492dddf84.gif1727397494144.gif",
+      "imagemPerfilNoView": "/data/comunidades/32432b346363e05ddc51b73492dddf84.gif1727397494144.gif",
+      "feed": []
+    }
+  ]
+}
