@@ -1,0 +1,182 @@
+/* Estilos gerais para a página de perfil */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.perfil-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Estilo para a capa e a foto de perfil */
+.perfil-header {
+    position: relative;
+    background-color: #5592dd;
+}
+
+.capa img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.perfil-info {
+    position: absolute;
+    bottom: -50px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid white;
+    object-fit: cover;
+}
+
+.perfil-info h1 {
+    margin-left: 20px;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+#amigoButton {
+    margin-left: 20px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#amigoButton:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo para a seção de declarações */
+.perfil-declaracoes {
+    padding: 20px;
+}
+
+.perfil-declaracoes h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.perfil-declaracoes ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.perfil-declaracoes li {
+    background-color: #f7f7f7;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+}
+/* Estilo para a seção de comunidades */
+.perfil-comunidades {
+    padding: 20px;
+}
+
+.perfil-comunidades h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Grid de comunidades */
+.community-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+/* Estilo de cada cartão de comunidade */
+.community {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+}
+
+.community:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.community img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+.community p {
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+}
+
+/* Ajuste no link da comunidade */
+.community a {
+    text-decoration: none;
+    color: inherit;
+}
+/* Estilo para a seção de comunidades */
+/*.perfil-comunidades {
+    padding: 20px;
+}
+
+.perfil-comunidades h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.comunidades-dono h3,
+.comunidades-participantes h3 {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.perfil-comunidades ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.perfil-comunidades li {
+    margin-bottom: 10px;
+}
+
+.perfil-comunidades li a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    background-color: #e7e7e7;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.perfil-comunidades li a:hover {
+    background-color: #d7d7d7;
+}
+
+.perfil-comunidades li a img {
+    margin-right: 10px;
+    border-radius: 50%;
+}

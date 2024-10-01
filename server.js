@@ -15,7 +15,11 @@ const flash = require('express-flash');
 const session = require('express-session');
 const methodOverride = require('method-override');
 const fs = require('fs');
+
 //const userDoc = require('./users.json');
+
+const EventEmitter = require('events');
+const eventos = new EventEmitter();
 
 const port = 3000;
 //const path = require("path");
@@ -27,7 +31,7 @@ const users = loadUsersFromFile(); // Carrega usuários do arquivo JSON
 app.use(express.static('public')); // Para servir arquivos estáticos
 app.use(bodyParser.json());
 app.use('/data', express.static(path.join(__dirname, 'view/data'))); // Servir arquivos estáticos
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Caminho para o arquivo JSON de publicações
 const PUBLICACOES_PATH = path.join(__dirname, 'publicacoes.json');
 const USERS_PATH = path.join(__dirname, 'users.json');
@@ -89,7 +93,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-
+//------------------------------------------------------------------------------------------------
 app.post("/upload", upload.single("profileImage"), (req, res) => {
   const userId = req.user.id;
   const profileImageName = req.file.filename; // Nome do arquivo
@@ -176,7 +180,7 @@ const user = req.user;
     declaracoes: user.declaracoes,
     comentarios:user.comentarios,
     amigos: user.amigos,
-    publicacoes: user.amigos.publicacoes,
+    publicacoes: user.publicacoes,
     publicacoesAmigos : user.amigos.publicacoesAmigos,
     comunidades: user.comunidades,
     comunidadesDono:user.comunidadesDono
@@ -648,6 +652,7 @@ app.post("/adicionar-amigo", ensureAuthenticated, (req, res) => {
     return res.status(400).json({ error: "ID do amigo ausente na solicitação." });
   }
   const users = loadUsersFromFile(); // Carrega usuários do arquivo JSON
+
   const currentUser = users.find(user => user.id === userId);
   const friendUser = users.find(user => user.id === friendId);
 
@@ -666,7 +671,33 @@ app.post("/adicionar-amigo", ensureAuthenticated, (req, res) => {
   currentUser.amigos.push(friendId);
   saveUsersToFile(users);
 
+  if (currentUser && !currentUser.amigos.includes(friendId)) {
+    currentUser.amigos.push(friendId);
+    saveUsersToFile(users);
+    // Emitir evento de adição de amigo
+    eventos.emit('amigoAdicionado', userId, friendId);
+// Retorna os amigos atualizados para o frontend
+res.json({ success: true, amigos: user.amigos });
+ // Salva as alterações no arquivo JSON
+ fs.writeFileSync('users.json', JSON.stringify(users, null, 2));//-----------------------------------------------------------
+
+//adicionarAmigo(friendId);
+
+     // Recarrega a página do perfil após a atualização
+  res.send(`
+    <html>
+    <head>
+      <script>
+        window.location.href = "/perfil";
+      </script>
+    </head>
+    <body>
+      <p>Atualizando...</p>
+    </body>
+    </html>
+  `);
   res.json({ message: "Amigo adicionado com sucesso." });
+  }
 });
 
 
@@ -681,15 +712,112 @@ app.post("/buscar-usuario", ensureAuthenticated, (req, res) => {
   }
 });
 
-app.get("/perfil/:id", ensureAuthenticated, (req, res) => {
-  const friendId = req.params.id;
-  const amigo = users.find(user => user.id === friendId);
+//app.get("/perfil/:id", ensureAuthenticated, (req, res) => {
+//  const friendId = req.params.id;
+//  const amigo = users.find(user => user.id === friendId);
+//
+//  if (!amigo) {
+//    return res.status(404).send("Amigo não encontrado.");
+//  }
+//
+//  res.render("amigoPerfil", { user: req.user, amigo: amigo });
+//});
 
-  if (!amigo) {
-    return res.status(404).send("Amigo não encontrado.");
+// Função para carregar o JSON de um arquivo
+function carregarJson(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) reject(err);
+      resolve(JSON.parse(data));
+    });
+  });
+}
+
+
+app.get('/perfil/:id', (req, res) => {
+  const userId = req.params.id;
+
+  // Leia o arquivo users.json
+  const data = fs.readFileSync(path.join(__dirname, 'users.json'), 'utf-8');
+  const users = JSON.parse(data);//em vez de fazer assim podemos tambem usar a função para json parse
+  //const users = carregarJson(data);
+
+  const dataComunidades = fs.readFileSync(path.join(__dirname, 'comunidades.json'), 'utf-8');
+  const todasComunidades = JSON.parse(dataComunidades).comunidades;
+  
+    // Leia o arquivo users.json
+    //const dataComunidades = fs.readFileSync(path.join(__dirname, 'comunidades.json'), 'utf-8');
+  
+    // Tente parsear como array de comunidades
+    //let todasComunidades;
+  // try {
+  //   const jsonComunidades = JSON.parse(dataComunidades);
+  //   todasComunidades = jsonComunidades.comunidades; // Acessar o array "comunidades"
+  //   if (!Array.isArray(todasComunidades)) {
+  //     throw new Error('comunidades não é um array');
+  //   }
+  // } catch (error) {
+  //   console.error('Erro ao carregar comunidades:', error);
+  //   return res.status(500).send('Erro ao carregar dados das comunidades');
+  // }
+
+  // Busque o amigo pelo ID
+  const amigo = users.find(usuario => usuario.id === userId);
+
+  // Usuário logado, caso exista
+  const user = req.session.user || {}; 
+  
+
+
+  if (amigo) {
+    // Filtrar comunidades do amigo
+    const comunidadesDoAmigo = todasComunidades.filter(comunidade =>
+      comunidade.membros.includes(amigo.id) || comunidade.donoId === amigo.id);
+
+    // Criar variável temporária com o caminho ajustado da imagem de perfil
+    let profileImageTempPath = amigo.profileImagePath;
+    if (profileImageTempPath.startsWith("./views")) {
+      profileImageTempPath = profileImageTempPath.replace("./views", "");
+    }
+
+    // Criar variável temporária com o caminho ajustado da capa (se necessário)
+    let capaImageTempPath = amigo.coverImagePath;
+    if (capaImageTempPath && capaImageTempPath.startsWith("./views")) {
+      capaImageTempPath = capaImageTempPath.replace("./views", "");
+    }
+
+
+      // Carregar comunidades do amigo
+       const amigoComunidades = amigo.comunidades || [];
+      // Carregar declarações do amigo
+      const amigoDeclaracoes = amigo.declaracoes || [];
+
+      
+         // Mapear as comunidades do usuário para adicionar o caminho da imagem corretamente
+    // Ajustar os caminhos das imagens
+    const comunidadesComImagens = comunidadesDoAmigo.map(comunidade => {
+      return {
+        ...comunidade,
+        imagemPerfilPath: comunidade.imagemPerfil.replace(/^\.\/views\//, '/')
+      };
+    });
+
+    // Carregar informações do amigo para a página de perfil
+    res.render('amigoPerfil', { 
+      user, // Usuário logado
+      amigo, // Objeto completo do amigo
+      amigoName: amigo.name, // Nome do amigo
+      amigoDeclaracoes: amigoDeclaracoes, // Declarações do amigo
+      amigoComunidadesDono: amigo.comunidadesDono || [], // Comunidades que o amigo é dono
+      amigoProfileImagePath: profileImageTempPath, // Caminho ajustado da imagem de perfil
+      amigoCapaImagePath: capaImageTempPath, // Caminho ajustado da imagem de capa (se aplicável)
+      amigoComunidades:amigoComunidades,  // Passando as comunidades,  // Passando as comunidades
+      comunidadesComImagens
+    });
+  } else {
+    // Caso o amigo não seja encontrado, retorna um erro 404
+    res.status(404).send('Amigo não encontrado');
   }
-
-  res.render("amigoPerfil", { user: req.user, amigo: amigo });
 });
 
 //pagina de amigos
@@ -705,7 +833,20 @@ app.get("/todos-amigos", ensureAuthenticated, (req, res) => {
   res.render("todosAmigos", { user: currentUser, amigos: todosAmigos });
 });
 
-
+function adicionarAmigo(amigoId) {
+  fetch("/adicionar-amigo", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ amigoId })
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Atualiza a seção de amigos sem recarregar a página
+    document.getElementById('lista-amigos').innerHTML = data.htmlAtualizado;
+  });
+}
 
 // Para publicações carregar e salvar 
 
@@ -813,8 +954,14 @@ app.get('/procurar-comunidade', ensureAuthenticated, (req, res) => {
   const { nome, usuarioId } = req.query; // Obtém o nome da comunidade e o ID do usuário a partir da query string
 
   // Carrega as comunidades
-  const data = loadComunidadesFromFile(); // Função que carrega comunidades
-  const comunidades = data.comunidades; // Acesse o array de comunidades
+  //const data = loadComunidadesFromFile(); // Função que carrega comunidades
+  //const comunidades = data.comunidades; // Acesse o array de comunidades
+  const comunidades = require('./comunidades.json').comunidades;
+  const usuarios = require('./users.json');
+
+  const comunidadeId = req.body.comunidadeId;
+  //const usuario = usuarios.find(u => u.id === req.user.id);
+  const comunidade = comunidades.find(c => c.id === comunidadeId);
 
   // Verifica se o retorno é um array válido
   if (!Array.isArray(comunidades)) {
@@ -845,7 +992,8 @@ app.get('/procurar-comunidade', ensureAuthenticated, (req, res) => {
   const usersData = loadUsersFromFile(); // Função que carrega os usuários
 
   // Encontra o usuário pelo ID
-  const usuario = usersData.find(u => u.id === usuarioId);
+  //const usuario = usersData.find(u => u.id === usuarioId);
+  const usuario = usuarios.find(u => u.id === usuarioId);
   if (!usuario) {
     return res.status(404).send('Usuário não encontrado.'); // Caso o usuário não seja encontrado
   }
@@ -853,15 +1001,48 @@ app.get('/procurar-comunidade', ensureAuthenticated, (req, res) => {
   // Adiciona o ID da comunidade no perfil do usuário (se ainda não estiver presente)
   if (!usuario.comunidades.includes(comunidadeEncontrada.id)) {
     usuario.comunidades.push(comunidadeEncontrada.id);
-  }
+    fs.writeFileSync('comunidades.json', JSON.stringify({ comunidades }, null, 2));
+    fs.writeFileSync('users.json', JSON.stringify(usuarios, null, 2));
+   
+    res.redirect('/feed'); // Redireciona para o feed após a atualização
+   
+  } else {
+    res.redirect('/feed'); // Se algo der errado, redireciona para o feed
+   }
 
   // Salva as mudanças no arquivo `users.json`
-  saveUsersToFile(usersData);
+//  saveUsersToFile(usersData);
+ // Salvar as alterações
 
   // Responde com sucesso
-  res.json({ message: `Você agora faz parte da comunidade ${comunidadeEncontrada.nome}.` });
-  window.location.href = '/feed';
+ // res.json({ message: `Você agora faz parte da comunidade ${comunidadeEncontrada.nome}.` });
+  //window.location.href = '/feed';
+ // adicionarComunidade(comunidadeId);
+  // Recarrega a página do perfil após a atualização
+
+  
+    // Responde com o HTML atualizado para ser inserido na página
+ //   res.json({ htmlAtualizado });
+
+ //  res.redirect('/dados-usuario');
+ // res.redirect('/feed');
 });
+
+function adicionarComunidade(comunidadeId) {
+  fetch("/adicionar-comunidade", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ comunidadeId })
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Substitui o conteúdo atual da lista de comunidades com o HTML atualizado
+    document.querySelector('.community-grid').innerHTML = data.htmlAtualizado;
+  })
+  .catch(error => console.error('Erro ao adicionar comunidade:', error));
+}
 //-------------------------------
 //app.post('/aderir-comunidade', (req, res) => {
 //  const { comunidadeId, usuarioId } = req.body; // Obtém os IDs da comunidade e do usuário

@@ -1,38 +1,87 @@
-<!-- views/amigoPerfil.ejs -->
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 <head>
-  <title>Perfil do Amigo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil de <%= amigoName %></title>
+  <link rel="stylesheet" href="/perfilFriend.css">
 </head>
 <body>
-  <h1>Perfil de <%= amigo.name %></h1>
+<div class="perfil-container">
+  <!-- Seção de Capa e Foto de Perfil -->
+  <div class="perfil-header">
+    <div class="capa">
+      <img src="<%= amigoCapaImagePath %>" alt="Imagem de Capa">
+    </div>
+    <div class="perfil-info">
+      <img class="profile-img" src="<%= amigoProfileImagePath  %>" alt="Foto de Perfil">
+      
+      <h1><%= amigoName %></h1>
+      <button id="amigoButton" onclick="toggleAmizade('<%= amigo.id %>')">
+        <%= (user.amigos && Array.isArray(user.amigos) && user.amigos.includes(amigo.id)) ? 'Remover Amigo' : 'Adicionar Amigo' %>
+      </button>
+    </div>
+  </div>
+
+  <!-- Seção de Declarações -->
+  <div id="declarations-section">
+    <h1>DIARIO DE DECLARAÇÕES</h1>
+    <h2>Declarações</h2>
   
-  <img id="profileImage" src="<%= amigo.profileImagePath %>?nocache=<%= Date.now() %>" alt="Profile Image">
+    <!-- Formulário para nova declaração (se aplicável para o amigo)
+    <form id="declaration-form" action="/adicionar-declaracao" method="POST">
+      <textarea class="declaration" id="declaration" name="declaration"></textarea>
+      <button type="submit">Publicar</button>
+    </form> -->
+  
+    <!-- Lista de declarações -->
+    <ul id="declaration-list">
+      <% amigoDeclaracoes.forEach(function(declaracao) { %>
+        <li><%= declaracao %></li>
+      <% }) %>
+    </ul>
+  </div>
 
-  <h2><%= amigo.name %></h2>
-  <button id="amigoButton" onclick="toggleAmizade('<%= amigo.id %>')">
-    <%= user.amigos && user.amigos.includes(amigo.id) ? 'Remover Amigo' : 'Adicionar Amigo' %>
-  </button>
+<!-- Seção de Comunidades -->
+<h3>Comunidades</h3>
+<div class="community-container">
+  <ul class="community-grid">
+    <% if (comunidadesComImagens.length > 0) { %>
+      <% comunidadesComImagens.forEach(comunidade => { %>
+        <li class="community">
+          <a href="/comunidade/<%= comunidade.id %>">
+            <img src="<%= comunidade.imagemPerfilPath %>" alt="<%= comunidade.nome %>">
+            <p><%= comunidade.nome %></p>
+          </a>
+        </li>
+      <% }) %>
+    <% } else { %>
+      <li>Usuário não participa de nenhuma comunidade.</li>
+    <% } %>
+  </ul>
+</div>
 
-  <script>
-    function toggleAmizade(friendId) {
-      const isAmigo = <%= user.amigos && user.amigos.includes(amigo.id) %>;
-      const url = isAmigo ? '/remover-amigo' : '/adicionar-amigo';
+    </ul>
+  </div>
+<script>
+  function toggleAmizade(friendId) {
+    const isAmigo = <%= user.amigos && user.amigos.includes(amigo.id) %>;
+    const url = isAmigo ? '/remover-amigo' : '/adicionar-amigo';
 
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ friendId: friendId })
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data.message);
-        window.location.reload();
-      })
-      .catch(error => console.error('Erro ao atualizar amizade:', error));
-    }
-  </script>
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ friendId: friendId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.message);
+      window.location.reload();
+    })
+    .catch(error => console.error('Erro ao atualizar amizade:', error));
+  }
+</script>
 </body>
 </html>

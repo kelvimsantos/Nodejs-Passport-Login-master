@@ -329,7 +329,8 @@
     "declaracoes": [],
     "comentarios": [],
     "amigos": [
-      "1727226924800"
+      "1727226924800",
+      "1727549335964"
     ],
     "publicacoes": [],
     "publicacoesAmigos": [],
@@ -417,7 +418,11 @@
     "profileImagePathNoView": "dir.jpg",
     "declaracoes": [],
     "comentarios": [],
-    "amigos": [],
+    "amigos": [
+      "1727549335964",
+      "1727505280929",
+      "1727388700700"
+    ],
     "publicacoes": [],
     "publicacoesAmigos": [],
     "comunidades": [
@@ -439,13 +444,85 @@
     "profileImagePathNoView": "dir.jpg",
     "declaracoes": [],
     "comentarios": [],
-    "amigos": [],
-    "publicacoes": [],
+    "amigos": [
+      "1727549335964"
+    ],
+    "publicacoes": [
+      {
+        "id": "_8a1j0q6av",
+        "autor": "1727505280929",
+        "conteudo": "testando publicação ",
+        "data": "2024-09-28T18:41:44.428Z"
+      },
+      {
+        "id": "_rmc6kfztc",
+        "autor": "1727505280929",
+        "conteudo": "teste2",
+        "data": "2024-09-28T18:43:02.525Z"
+      }
+    ],
     "publicacoesAmigos": [],
     "comunidades": [
       "comunidade2",
-      "comunidade15"
+      "comunidade15",
+      "comunidade3",
+      "comunidade4",
+      "comunidade5",
+      "comunidade7",
+      "comunidade15",
+      "comunidade16",
+      "comunidade17"
     ],
-    "comunidadesDono": []
+    "comunidadesDono": [
+      "comunidade15",
+      "comunidade16",
+      "comunidade17"
+    ]
+  },
+  {
+    "id": "1727549335964",
+    "name": "usuario4",
+    "email": "usuario4@4.com",
+    "password": "$2b$10$hLkdzgrOsddfrZ.iPZgqJevPf7WBnbU7ECvJ98IkMXuvC.cRHqZQq",
+    "profileImagePath": "./views/data/4d8bfb98cf6b0a6c3354ff570bfa1212.gif1727632610323.gif",
+    "coverImagePath": "./views/data/Twitter_GIF.gif1727663127781.gif",
+    "profileImagePathNoView": "./data/4d8bfb98cf6b0a6c3354ff570bfa1212.gif1727632610323.gif",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [
+      "1727505280929",
+      "1727396066699",
+      "1727388700700",
+      "1727373282153",
+      "1727310764911",
+      "1727549335964",
+      "1725200541385"
+    ],
+    "publicacoes": [
+      {
+        "id": "_zidh9g1os",
+        "autor": "1727549335964",
+        "conteudo": "as",
+        "data": "2024-09-29T02:03:25.856Z"
+      }
+    ],
+    "publicacoesAmigos": [],
+    "comunidades": [
+      "comunidade2",
+      "comunidade15",
+      "comunidade3",
+      "comunidade18",
+      "comunidade19",
+      "comunidade20",
+      "comunidade21"
+    ],
+    "comunidadesDono": [
+      "comunidade18",
+      "comunidade19",
+      "comunidade20",
+      "comunidade21"
+    ],
+    "profileImageName": "4d8bfb98cf6b0a6c3354ff570bfa1212.gif1727632610323.gif",
+    "coverImageName": "Twitter_GIF.gif1727663127781.gif"
   }
 ]
