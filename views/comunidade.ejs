@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title><%= comunidade.nome %></title>
+  <link rel="stylesheet" href="/comunidade.css">
+</head>
+<body>
+  <div class="comunidade-container">
+    <!-- Cabeçalho da Comunidade -->
+    <div class="comunidade-header">
+      <div class="community-capa"> <img  src="<%= comunidade.imagemPerfil.replace('./views', '') %>" alt="Imagem da Comunidade"></div>
+      <h1><%= comunidade.nome %></h1>
+      <p><%= comunidade.descricao %></p>
+      <button id="participarButton" onclick="toggleParticipacao('<%= comunidade.id %>')">
+        <%= comunidade.membros.includes(user.id) ? 'Sair da Comunidade' : 'Participar da Comunidade' %>
+      </button>
+    </div>
+
+    <!-- Membros da Comunidade -->
+    <h2>Membros</h2>
+    <ul class="membros-lista">
+      <% membros.forEach(membro => { %>
+        <li>
+          <a href="/perfil/<%= membro.id %>">
+            <img src="<%= membro.profileImagePath.replace('./views', '') %>" alt="Foto de perfil" width="30" height="30">
+            <%= membro.name %>
+          </a>
+        </li>
+      <% }) %>
+    </ul>
+
+    <!-- Publicações da Comunidade -->
+    <h2>Publicações</h2>
+
+    <!-- Formulário para nova publicação -->
+    <form action="/comunidade/<%= comunidade.id %>/publicar" method="POST">
+      <textarea name="conteudo" placeholder="Escreva uma publicação..."></textarea>
+      <button type="submit">Publicar</button>
+    </form>
+
+    <!-- Lista de Publicações -->
+    <ul class="publicacoes-lista">
+      <% publicacoes.forEach(publicacao => { %>
+        <li>
+          <p><strong><%= publicacao.autorNome %></strong> - <%= new Date(publicacao.data).toLocaleString() %></p>
+          <p><%= publicacao.conteudo %></p>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+
+  <script>
+    function toggleParticipacao(comunidadeId) {
+      const isMembro = <%= comunidade.membros.includes(user.id) %>;
+      const url = isMembro ? '/sair-comunidade' : '/entrar-comunidade';
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ comunidadeId: comunidadeId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        window.location.reload();
+      })
+      .catch(error => console.error('Erro ao atualizar participação:', error));
+    }
+  </script>
+</body>
+</html>

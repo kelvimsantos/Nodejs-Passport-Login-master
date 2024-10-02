@@ -745,29 +745,11 @@ app.get('/perfil/:id', (req, res) => {
   const dataComunidades = fs.readFileSync(path.join(__dirname, 'comunidades.json'), 'utf-8');
   const todasComunidades = JSON.parse(dataComunidades).comunidades;
   
-    // Leia o arquivo users.json
-    //const dataComunidades = fs.readFileSync(path.join(__dirname, 'comunidades.json'), 'utf-8');
-  
-    // Tente parsear como array de comunidades
-    //let todasComunidades;
-  // try {
-  //   const jsonComunidades = JSON.parse(dataComunidades);
-  //   todasComunidades = jsonComunidades.comunidades; // Acessar o array "comunidades"
-  //   if (!Array.isArray(todasComunidades)) {
-  //     throw new Error('comunidades não é um array');
-  //   }
-  // } catch (error) {
-  //   console.error('Erro ao carregar comunidades:', error);
-  //   return res.status(500).send('Erro ao carregar dados das comunidades');
-  // }
-
   // Busque o amigo pelo ID
   const amigo = users.find(usuario => usuario.id === userId);
 
   // Usuário logado, caso exista
   const user = req.session.user || {}; 
-  
-
 
   if (amigo) {
     // Filtrar comunidades do amigo
@@ -786,13 +768,11 @@ app.get('/perfil/:id', (req, res) => {
       capaImageTempPath = capaImageTempPath.replace("./views", "");
     }
 
-
       // Carregar comunidades do amigo
        const amigoComunidades = amigo.comunidades || [];
       // Carregar declarações do amigo
       const amigoDeclaracoes = amigo.declaracoes || [];
 
-      
          // Mapear as comunidades do usuário para adicionar o caminho da imagem corretamente
     // Ajustar os caminhos das imagens
     const comunidadesComImagens = comunidadesDoAmigo.map(comunidade => {
@@ -819,6 +799,105 @@ app.get('/perfil/:id', (req, res) => {
     res.status(404).send('Amigo não encontrado');
   }
 });
+
+
+app.get('/comunidade/:id', ensureAuthenticated, (req, res) => {
+  const comunidadeId = req.params.id;
+  const comunidadesData = require('./comunidades.json');
+  const comunidade = comunidadesData.comunidades.find(c => c.id === comunidadeId);
+
+  if (!comunidade) {
+    return res.status(404).send('Comunidade não encontrada');
+  }
+
+  const users = loadUsersFromFile(); // Carrega usuários do arquivo JSON
+
+  // Obter informações dos membros da comunidade
+  const membros = users.filter(user => comunidade.membros.includes(user.id));
+
+  // Carregar publicações da comunidade
+  const publicacoes = comunidade.publicacoes || [];
+
+  res.render('comunidade', {
+    user: req.user,
+    comunidade,
+    membros,
+    publicacoes
+  });
+});
+
+
+app.post('/entrar-comunidade', ensureAuthenticated, (req, res) => {
+  const comunidadeId = req.body.comunidadeId;
+  const comunidadesData = require('./comunidades.json');
+  const comunidade = comunidadesData.comunidades.find(c => c.id === comunidadeId);
+
+  if (!comunidade) {
+    return res.status(404).json({ message: 'Comunidade não encontrada' });
+  }
+
+  if (!comunidade.membros.includes(req.user.id)) {
+    comunidade.membros.push(req.user.id);
+    fs.writeFileSync('./comunidades.json', JSON.stringify(comunidadesData, null, 2));
+  }
+
+  res.json({ message: 'Você entrou na comunidade!' });
+});
+
+app.post('/sair-comunidade', ensureAuthenticated, (req, res) => {
+  const comunidadeId = req.body.comunidadeId;
+  const comunidadesData = require('./comunidades.json');
+  const comunidade = comunidadesData.comunidades.find(c => c.id === comunidadeId);
+
+  if (!comunidade) {
+    return res.status(404).json({ message: 'Comunidade não encontrada' });
+  }
+
+  comunidade.membros = comunidade.membros.filter(id => id !== req.user.id);
+  fs.writeFileSync('./comunidades.json', JSON.stringify(comunidadesData, null, 2));
+
+  res.json({ message: 'Você saiu da comunidade!' });
+});
+
+app.post('/comunidade/:id/publicar', ensureAuthenticated, (req, res) => {
+  const comunidadeId = req.params.id;
+  const conteudo = req.body.conteudo;
+
+  const comunidadesData = require('./comunidades.json');
+  const comunidade = comunidadesData.comunidades.find(c => c.id === comunidadeId);
+
+  if (!comunidade) {
+    return res.status(404).send('Comunidade não encontrada');
+  }
+
+  // Verificar se o usuário é membro da comunidade
+  if (!comunidade.membros.includes(req.user.id)) {
+    return res.status(403).send('Você não é membro desta comunidade');
+  }
+
+  // Criar nova publicação
+  const novaPublicacao = {
+    id: uuidv4(), // Use uma função para gerar IDs únicos
+    autorId: req.user.id,
+    autorNome: req.user.name,
+    conteudo: conteudo,
+    data: new Date().toISOString()
+  };
+
+  // Adicionar a publicação à comunidade
+  if (!comunidade.publicacoes) {
+    comunidade.publicacoes = [];
+  }
+  comunidade.publicacoes.push(novaPublicacao);
+
+  // Salvar as alterações
+  fs.writeFileSync('./comunidades.json', JSON.stringify(comunidadesData, null, 2));
+
+  res.redirect('/comunidade/' + comunidadeId);
+});
+
+
+
 
 //pagina de amigos
 app.get("/todos-amigos", ensureAuthenticated, (req, res) => {
