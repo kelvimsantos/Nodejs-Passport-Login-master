@@ -1,0 +1,20 @@
+{
+  "publicacoes": [
+    {
+      "id": "pub1",
+      "autorId": "1727549335964",
+      "conteudo": "Esta é a primeira publicação.",
+      "data": "2024-01-01T12:00:00Z",
+      "imagemPublicacao": "/path/to/image.jpg",
+      "comunidadeId": "comunidade21"
+    },
+    {
+      "id": "1727924187903-9372",
+      "autorId": "1727549335964",
+      "conteudo": "testeeeeeeeeee",
+      "data": "2024-10-03T02:56:27.903Z",
+      "imagemPublicacao": "",
+      "comunidadeId": "comunidade18"
+    }
+  ]
+}

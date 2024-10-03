@@ -39,17 +39,31 @@
       <button type="submit">Publicar</button>
     </form>
 
-    <!-- Lista de Publicações -->
+
     <ul class="publicacoes-lista">
       <% publicacoes.forEach(publicacao => { %>
-        <li>
-          <p><strong><%= publicacao.autorNome %></strong> - <%= new Date(publicacao.data).toLocaleString() %></p>
-          <p><%= publicacao.conteudo %></p>
+        <li class="publicacao-item">
+          <!-- Perfil do Autor -->
+          <div class="publicacao-autor">
+            <img src="<%= publicacao.autorImagem.replace('./views', '') %>" alt="Foto de perfil" class="autor-foto">
+            <div class="autor-info">
+              <strong><%= publicacao.autorNome %></strong>
+              <p class="publicacao-data"><%= new Date(publicacao.data).toLocaleString() %></p>
+            </div>
+          </div>
+    
+          <!-- Conteúdo da Publicação -->
+          <div class="publicacao-conteudo">
+            <p><%= publicacao.conteudo %></p>
+            <% if (publicacao.imagemPublicacao) { %>
+              <img src="<%= publicacao.imagemPublicacao %>" alt="Imagem da Publicação">
+            <% } %>
+          </div>
         </li>
       <% }) %>
     </ul>
-  </div>
 
+    
   <script>
     function toggleParticipacao(comunidadeId) {
       const isMembro = <%= comunidade.membros.includes(user.id) %>;

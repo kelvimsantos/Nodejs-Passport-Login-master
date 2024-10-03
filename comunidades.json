@@ -214,9 +214,7 @@
       "id": "comunidade18",
       "donoId": "1727549335964",
       "nome": "teste5",
-      "membros": [
-        "1727549335964"
-      ],
+      "membros": [],
       "quantidadeMembros": 1,
       "imagemPerfil": "./views/data/comunidades/6877826a3c319fdfb5f4fb304465d2b3_w200.gif1727579396665.gif",
       "imagemPerfilNoView": "/data/comunidades/6877826a3c319fdfb5f4fb304465d2b3_w200.gif1727579396665.gif",

@@ -804,25 +804,36 @@ app.get('/perfil/:id', (req, res) => {
 app.get('/comunidade/:id', ensureAuthenticated, (req, res) => {
   const comunidadeId = req.params.id;
   const comunidadesData = require('./comunidades.json');
+  const publicacoesData = require('./publicacoesComunidade.json'); // Atualizado para o novo nome
+  const users = loadUsersFromFile(); // Carrega usuários do arquivo JSON
+
   const comunidade = comunidadesData.comunidades.find(c => c.id === comunidadeId);
 
   if (!comunidade) {
     return res.status(404).send('Comunidade não encontrada');
   }
 
-  const users = loadUsersFromFile(); // Carrega usuários do arquivo JSON
+  // Filtrar publicações da comunidade
+  const publicacoes = publicacoesData.publicacoes.filter(pub => pub.comunidadeId === comunidadeId);
+
+  // Mapear informações de autores para cada publicação
+  const publicacoesComAutor = publicacoes.map(pub => {
+    const autor = users.find(user => user.id === pub.autorId);
+    return {
+      ...pub,
+      autorNome: autor ? autor.name : 'Usuário desconhecido',
+      autorImagem: autor ? autor.profileImagePath : '/path/to/default-image.jpg'
+    };
+  });
 
   // Obter informações dos membros da comunidade
   const membros = users.filter(user => comunidade.membros.includes(user.id));
-
-  // Carregar publicações da comunidade
-  const publicacoes = comunidade.publicacoes || [];
 
   res.render('comunidade', {
     user: req.user,
     comunidade,
     membros,
-    publicacoes
+    publicacoes: publicacoesComAutor
   });
 });
 
@@ -861,42 +872,32 @@ app.post('/sair-comunidade', ensureAuthenticated, (req, res) => {
 
 app.post('/comunidade/:id/publicar', ensureAuthenticated, (req, res) => {
   const comunidadeId = req.params.id;
-  const conteudo = req.body.conteudo;
+  const publicacoesData = require('./publicacoesComunidade.json'); // Carregando o arquivo JSON
+  const { conteudo, imagemPublicacao } = req.body;
 
-  const comunidadesData = require('./comunidades.json');
-  const comunidade = comunidadesData.comunidades.find(c => c.id === comunidadeId);
-
-  if (!comunidade) {
-    return res.status(404).send('Comunidade não encontrada');
-  }
-
-  // Verificar se o usuário é membro da comunidade
-  if (!comunidade.membros.includes(req.user.id)) {
-    return res.status(403).send('Você não é membro desta comunidade');
-  }
-
-  // Criar nova publicação
-  const novaPublicacao = {
-    id: uuidv4(), // Use uma função para gerar IDs únicos
-    autorId: req.user.id,
-    autorNome: req.user.name,
-    conteudo: conteudo,
-    data: new Date().toISOString()
+  // Função para gerar um ID único com a data atual e números aleatórios
+  const generateId = () => {
+    const timestamp = Date.now(); // Obtém a data atual em milissegundos
+    const randomNum = Math.floor(Math.random() * 10000); // Gera um número aleatório entre 0 e 9999
+    return `${timestamp}-${randomNum}`; // Combina a data com o número aleatório
   };
 
-  // Adicionar a publicação à comunidade
-  if (!comunidade.publicacoes) {
-    comunidade.publicacoes = [];
-  }
-  comunidade.publicacoes.push(novaPublicacao);
+  const novaPublicacao = {
+    id: generateId(), // Usa a função para gerar um ID
+    autorId: req.user.id,
+    conteudo: conteudo,
+    data: new Date().toISOString(),
+    imagemPublicacao: imagemPublicacao || '',
+    comunidadeId: comunidadeId
+  };
 
-  // Salvar as alterações
-  fs.writeFileSync('./comunidades.json', JSON.stringify(comunidadesData, null, 2));
+  publicacoesData.publicacoes.push(novaPublicacao);
 
-  res.redirect('/comunidade/' + comunidadeId);
+  // Salvar a nova publicação no arquivo publicacoesComunidade.json
+  fs.writeFileSync('./publicacoesComunidade.json', JSON.stringify(publicacoesData, null, 2));
+
+  res.redirect(`/comunidade/${comunidadeId}`);
 });
-
-
 
 
 //pagina de amigos
