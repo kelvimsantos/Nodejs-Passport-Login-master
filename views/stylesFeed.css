@@ -195,8 +195,9 @@
 }
 
 .community img {
+    display: flex;
     width: 100px; /* Mantém a proporção */
-    max-width: 80%; /* Define uma largura máxima */
+    max-width: auto; /* Define uma largura máxima */
     max-height: 80%; /* Define uma altura máxima para evitar achatamento */
     height: auto;
     object-fit: cover;
@@ -204,7 +205,7 @@
     margin-bottom: 10px;
     border: 2px solid #ccc;
     clip-path: circle(50% at 50% 50%); /* Corta a imagem para garantir que seja perfeitamente circular */
-    display: block;          /* Garante que a imagem não tenha comportamento inesperado em relação ao texto */
+ /*   display: block;          /* Garante que a imagem não tenha comportamento inesperado em relação ao texto */
     overflow: hidden;
     object-position: center;  
 }
@@ -239,7 +240,10 @@
 }
 
 .friend img {
-    width: 180%;
+    
+    width: 100px; /* Mantém a proporção */
+    max-width: auto; /* Define uma largura máxima */
+    max-height: 80%; /* Define uma altura máxima para evitar achatamento */
     height: auto;
     border-radius: 50%; /* Para deixar completamente circular */
     margin-bottom: 10px;

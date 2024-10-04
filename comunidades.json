@@ -255,6 +255,18 @@
       "imagemPerfil": "./views/data/comunidades/200.gif1727752670479.gif",
       "imagemPerfilNoView": "/data/comunidades/200.gif1727752670479.gif",
       "feed": []
+    },
+    {
+      "id": "comunidade22",
+      "donoId": "1727549335964",
+      "nome": "Dev Foda",
+      "membros": [
+        "1727549335964"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/comunidades/images (6).jfif1728001750884.jfif",
+      "imagemPerfilNoView": "/data/comunidades/images (6).jfif1728001750884.jfif",
+      "feed": []
     }
   ]
 }

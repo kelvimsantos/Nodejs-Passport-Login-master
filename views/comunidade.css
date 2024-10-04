@@ -14,7 +14,13 @@
     margin: auto;
     
   }
- 
+  .community-capa img {
+    width: 100%; /* Para que a imagem ocupe toda a largura do container */
+    height: 100%; /* Para preencher toda a altura do container */
+    object-fit: cover; /* Mantém o centro da imagem visível e corta o excesso */
+    object-position: center; /* Centraliza a imagem, garantindo que o foco esteja no meio */
+    border-radius: 10px; /* Arredonda os cantos da imagem */
+}
   .community-container {
     text-align: center; /* Centraliza o conteúdo */
   }
@@ -33,7 +39,7 @@
     text-align: center;
   }
   
-  .comunidade-header img {
+  .comunidade-headerimg {
     width: 100%;
     height: auto;
     

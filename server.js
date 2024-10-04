@@ -73,7 +73,12 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'fallbackSecret', // fallback em caso de não encontrar a variável
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // Se estiver usando HTTP. Para HTTPS, defina como true
+  cookie: {  maxAge: 60 * 60 * 1000,     // 1 hora de duração da sessão
+    secure: false,              // Defina `true` se estiver usando HTTPS
+    httpOnly: true,             // Protege contra scripts JavaScript acessarem o cookie
+    sameSite: 'strict'          // Garante que os cookies sejam enviados apenas para o mesmo site (ajuda na segurança)
+}
+  //cookie: { secure: false } // Se estiver usando HTTP. Para HTTPS, defina como true
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -356,8 +361,13 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
 
 
 app.delete('/logout', (req, res) => {
-  req.logOut();
+  //req.logOut();
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).send('Erro ao desconectar');
+        }
   res.redirect('/login');
+});
 });
 
 
