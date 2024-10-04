@@ -38,15 +38,7 @@ const USERS_PATH = path.join(__dirname, 'users.json');
 // Carregar todas as comunidades
 //const comunidades = JSON.parse(fs.readFileSync('comunidades.json', 'utf-8')).comunidades;
 
-//const { buscarUsuarioPorId, carregarPublicacoes, salvarPublicacao } = require('./utils');
-//const { carregarPublicacoes, salvarPublicacao } = require('./utils');
 
-//initializePassport(
-//  passport,
-//  email => users.find(user => user.email === email),
-//  id => users.find(user => user.id === id),
-//  loadUsersFromFile
-//);
 initializePassport(
   passport,
   email => {
@@ -76,10 +68,13 @@ app.use(session({
   cookie: {  maxAge: 60 * 60 * 1000,     // 1 hora de duração da sessão
     secure: false,              // Defina `true` se estiver usando HTTPS
     httpOnly: true,             // Protege contra scripts JavaScript acessarem o cookie
-    sameSite: 'strict'          // Garante que os cookies sejam enviados apenas para o mesmo site (ajuda na segurança)
+    sameSite: 'lax'          // Garante que os cookies sejam enviados apenas para o mesmo site (ajuda na segurança)
 }
   //cookie: { secure: false } // Se estiver usando HTTP. Para HTTPS, defina como true
 }));
+
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride('_method'));
@@ -362,12 +357,7 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
 
 app.delete('/logout', (req, res) => {
   //req.logOut();
-    req.session.destroy(err => {
-        if (err) {
-            return res.status(500).send('Erro ao desconectar');
-        }
   res.redirect('/login');
-});
 });
 
 
