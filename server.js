@@ -487,7 +487,9 @@ app.post('/salvar-declaracao', ensureAuthenticated, (req, res) => {
 // Função para adicionar nova publicação ao campo de publicações do usuário
 app.post('/adicionar-publicacao', ensureAuthenticated, (req, res) => {
   const currentUser = req.user; // Usuário atual
-
+  if (!req.session || !req.session.userId) {
+    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  }
 
 
   const novaPublicacao = {
@@ -516,9 +518,7 @@ currentUser.amigos.forEach(amigoId => {
   }
 });
 
-if (!req.session || !req.session.userId) {
-  return res.status(401).send('Você foi desconectado. Faça login novamente.');
-}
+
 req.session.save((err) => {
   if (err) {
     console.error('Erro ao salvar a sessão:', err);
