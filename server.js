@@ -105,13 +105,26 @@ app.post("/upload", upload.single("profileImage"), (req, res) => {
   currentUser.profileImagePath = profileImagePath;
   currentUser.profileImagePathNoView = profileImagePathNoView;
 
+  if (!req.session || !req.session.userId) {
+    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  }
+
+
   // Salve os dados de volta no arquivo JSON
   saveUsersToFile(users);
-
+  reloadUsersData();
  // res.json({ message: "Nome e caminho da imagem do perfil atualizados com sucesso." });
   // Salve os dados de volta no arquivo JSON
   //fs.writeFileSync("./users.json", JSON.stringify(users, null, 2));
   // Responda com uma página HTML que contenha um script para atualizar dinamicamente a página do cliente
+
+   // Salva a sessão manualmente antes de redirecionar
+   req.session.save((err) => {
+    if (err) {
+      console.error('Erro ao salvar a sessão:', err);
+      return res.status(500).send('Erro ao salvar a sessão');
+    }
+
   res.send(`
     <html>
     <head>
@@ -125,6 +138,8 @@ app.post("/upload", upload.single("profileImage"), (req, res) => {
     </body>
     </html>
   `);
+});
+
   //res.json({ message: "Nome e caminho da imagem do perfil atualizados com sucesso." });
 });
 

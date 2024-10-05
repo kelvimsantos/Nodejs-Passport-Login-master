@@ -484,9 +484,9 @@
     "name": "usuario4",
     "email": "usuario4@4.com",
     "password": "$2b$10$hLkdzgrOsddfrZ.iPZgqJevPf7WBnbU7ECvJ98IkMXuvC.cRHqZQq",
-    "profileImagePath": "./views/data/4d8bfb98cf6b0a6c3354ff570bfa1212.gif1727632610323.gif",
+    "profileImagePath": "./views/data/images (6).jfif1728088615909.jfif",
     "coverImagePath": "./views/data/Twitter_GIF.gif1727663127781.gif",
-    "profileImagePathNoView": "./data/4d8bfb98cf6b0a6c3354ff570bfa1212.gif1727632610323.gif",
+    "profileImagePathNoView": "./data/images (6).jfif1728088615909.jfif",
     "declaracoes": [
       "teste",
       "tesdteee",
@@ -549,7 +549,7 @@
       "comunidade21",
       "comunidade22"
     ],
-    "profileImageName": "4d8bfb98cf6b0a6c3354ff570bfa1212.gif1727632610323.gif",
+    "profileImageName": "images (6).jfif1728088615909.jfif",
     "coverImageName": "Twitter_GIF.gif1727663127781.gif"
   }
 ]
