@@ -516,15 +516,15 @@ currentUser.amigos.forEach(amigoId => {
   }
 });
 
-//if (!req.session || !req.session.userId) {
-//  return res.status(401).send('Você foi desconectado. Faça login novamente.');
-//}
-//req.session.save((err) => {
-//  if (err) {
-//    console.error('Erro ao salvar a sessão:', err);
-//    return res.status(500).send('Erro ao salvar a sessão');
-//  }
-//});
+if (!req.session || !req.session.userId) {
+  return res.status(401).send('Você foi desconectado. Faça login novamente.');
+}
+req.session.save((err) => {
+  if (err) {
+    console.error('Erro ao salvar a sessão:', err);
+    return res.status(500).send('Erro ao salvar a sessão');
+  }
+});
   // Redireciona de volta ao feed para exibir a nova publicação
   res.redirect('/feed');
 });
