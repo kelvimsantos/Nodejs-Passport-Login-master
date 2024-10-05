@@ -487,10 +487,6 @@ app.post('/salvar-declaracao', ensureAuthenticated, (req, res) => {
 // Função para adicionar nova publicação ao campo de publicações do usuário
 app.post('/adicionar-publicacao', ensureAuthenticated, (req, res) => {
   const currentUser = req.user; // Usuário atual
-  if (!req.session || !req.session.userId) {
-    return res.status(401).send('Você foi desconectado. Faça login novamente.');
-  }
-
 
   const novaPublicacao = {
     id: gerarIdUnico(), // Função para gerar um ID único para a publicação
@@ -501,6 +497,10 @@ app.post('/adicionar-publicacao', ensureAuthenticated, (req, res) => {
 
   // Adiciona a nova publicação ao campo de publicações do usuário atual
   currentUser.publicacoes.push(novaPublicacao);
+  
+  if (!req.session || !req.session.userId) {
+    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  }
 
   // Atualiza o arquivo de usuários com a nova publicação adicionada
   const users = loadUsersFromFile();
