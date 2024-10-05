@@ -443,9 +443,7 @@ app.post('/salvar-declaracao', ensureAuthenticated, (req, res) => {
 
   // Obtém o ID do usuário a partir do objeto req.user
   const userId = req.user.id;
-  if (!req.session || !req.session.userId) {
-    return res.status(401).send('Você foi desconectado. Faça login novamente.');
-  }
+
   // Carrega os dados atuais do arquivo JSON
   let users = [];
   try {
@@ -477,17 +475,12 @@ app.post('/salvar-declaracao', ensureAuthenticated, (req, res) => {
     console.log('Declaração salva com sucesso para o usuário:', userId);
     // Retorna a declaração salva como resposta
     res.json({ declaration: declaration });
+    
   } catch (error) {
     console.error('Erro ao gravar no arquivo JSON:', error);
     return res.status(500).json({ error: 'Erro ao gravar no arquivo JSON.' });
   }
   
-  req.session.save((err) => {
-    if (err) {
-      console.error('Erro ao salvar a sessão:', err);
-      return res.status(500).send('Erro ao salvar a sessão');
-    }
-	});
     //vai recarregar o arquivo atualizando pra poder ser lido 
   //  reloadUsersData();
 });
@@ -505,7 +498,7 @@ app.post('/adicionar-publicacao', ensureAuthenticated, (req, res) => {
 
   // Adiciona a nova publicação ao campo de publicações do usuário atual
   currentUser.publicacoes.push(novaPublicacao);
-
+  
   if (!req.session || !req.session.userId) {
     return res.status(401).send('Você foi desconectado. Faça login novamente.');
   }
