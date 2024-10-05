@@ -487,6 +487,9 @@ app.post('/salvar-declaracao', ensureAuthenticated, (req, res) => {
 // Função para adicionar nova publicação ao campo de publicações do usuário
 app.post('/adicionar-publicacao', ensureAuthenticated, (req, res) => {
   const currentUser = req.user; // Usuário atual
+
+
+
   const novaPublicacao = {
     id: gerarIdUnico(), // Função para gerar um ID único para a publicação
     autor: currentUser.id,
@@ -512,6 +515,16 @@ currentUser.amigos.forEach(amigoId => {
     amigo.publicacoesAmigos.push(novaPublicacao); // Adiciona a publicação ao campo `publicacoesAmigos`
   }
 });
+
+if (!req.session || !req.session.userId) {
+  return res.status(401).send('Você foi desconectado. Faça login novamente.');
+}
+req.session.save((err) => {
+  if (err) {
+    console.error('Erro ao salvar a sessão:', err);
+    return res.status(500).send('Erro ao salvar a sessão');
+  }
+});
   // Redireciona de volta ao feed para exibir a nova publicação
   res.redirect('/feed');
 });
@@ -523,6 +536,9 @@ function gerarIdUnico() {
 // Rota para salvar a publicação do usuário
 app.post('/salvar-publicacao', ensureAuthenticated, (req, res) => {
   const publicacao = req.body.publicacao;
+  if (!req.session || !req.session.userId) {
+    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  }
 
   if (!publicacao) {
     return res.status(400).json({ error: 'A publicação não pode estar vazia.' });
@@ -531,6 +547,7 @@ app.post('/salvar-publicacao', ensureAuthenticated, (req, res) => {
   const userId = req.user.id;
 
   let users = [];
+
   try {
     users = loadUsersFromFile();
   } catch (error) {
@@ -563,6 +580,12 @@ fs.writeFile(path.join(__dirname, 'users.json'), JSON.stringify(newPublicacao),(
   console.log("Terminado a gravação!.....");
 });
 
+req.session.save((err) => {
+  if (err) {
+    console.error('Erro ao salvar a sessão:', err);
+    return res.status(500).send('Erro ao salvar a sessão');
+  }
+});
   });
 
 //=================================================================
@@ -663,6 +686,10 @@ app.post("/adicionar-amigo", ensureAuthenticated, (req, res) => {
   const userId = req.user.id;
   const friendId = req.body.friendId;
 
+  if (!req.session || !req.session.userId) {
+    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  }
+
   if (!friendId) {
     return res.status(400).json({ error: "ID do amigo ausente na solicitação." });
   }
@@ -697,7 +724,11 @@ res.json({ success: true, amigos: user.amigos });
  fs.writeFileSync('users.json', JSON.stringify(users, null, 2));//-----------------------------------------------------------
 
 //adicionarAmigo(friendId);
-
+req.session.save((err) => {
+  if (err) {
+    console.error('Erro ao salvar a sessão:', err);
+    return res.status(500).send('Erro ao salvar a sessão');
+  }
      // Recarrega a página do perfil após a atualização
   res.send(`
     <html>
@@ -711,6 +742,7 @@ res.json({ success: true, amigos: user.amigos });
     </body>
     </html>
   `);
+});
   res.json({ message: "Amigo adicionado com sucesso." });
   }
 });
@@ -719,24 +751,23 @@ res.json({ success: true, amigos: user.amigos });
 app.post("/buscar-usuario", ensureAuthenticated, (req, res) => {
   const email = req.body.email;
   const usuarioEncontrado = users.find(user => user.email === email);
-  
+  if (!req.session || !req.session.userId) {
+    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  }
+
   if (usuarioEncontrado) {
     res.json(usuarioEncontrado);
   } else {
     res.status(404).json({ error: "Usuário não encontrado." });
   }
+  req.session.save((err) => {
+    if (err) {
+      console.error('Erro ao salvar a sessão:', err);
+      return res.status(500).send('Erro ao salvar a sessão');
+    }
+	});
 });
 
-//app.get("/perfil/:id", ensureAuthenticated, (req, res) => {
-//  const friendId = req.params.id;
-//  const amigo = users.find(user => user.id === friendId);
-//
-//  if (!amigo) {
-//    return res.status(404).send("Amigo não encontrado.");
-//  }
-//
-//  res.render("amigoPerfil", { user: req.user, amigo: amigo });
-//});
 
 // Função para carregar o JSON de um arquivo
 function carregarJson(filePath) {
@@ -858,6 +889,10 @@ app.post('/entrar-comunidade', ensureAuthenticated, (req, res) => {
   const comunidadesData = require('./comunidades.json');
   const comunidade = comunidadesData.comunidades.find(c => c.id === comunidadeId);
 
+  if (!req.session || !req.session.userId) {
+    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  }
+
   if (!comunidade) {
     return res.status(404).json({ message: 'Comunidade não encontrada' });
   }
@@ -866,6 +901,13 @@ app.post('/entrar-comunidade', ensureAuthenticated, (req, res) => {
     comunidade.membros.push(req.user.id);
     fs.writeFileSync('./comunidades.json', JSON.stringify(comunidadesData, null, 2));
   }
+
+  req.session.save((err) => {
+    if (err) {
+      console.error('Erro ao salvar a sessão:', err);
+      return res.status(500).send('Erro ao salvar a sessão');
+    }
+	});
 
   res.json({ message: 'Você entrou na comunidade!' });
 });
@@ -890,6 +932,7 @@ app.post('/comunidade/:id/publicar', ensureAuthenticated, (req, res) => {
   const publicacoesData = require('./publicacoesComunidade.json'); // Carregando o arquivo JSON
   const { conteudo, imagemPublicacao } = req.body;
 
+
   // Função para gerar um ID único com a data atual e números aleatórios
   const generateId = () => {
     const timestamp = Date.now(); // Obtém a data atual em milissegundos
@@ -907,9 +950,19 @@ app.post('/comunidade/:id/publicar', ensureAuthenticated, (req, res) => {
   };
 
   publicacoesData.publicacoes.push(novaPublicacao);
-
+  
+  if (!req.session || !req.session.userId) {
+    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  }
   // Salvar a nova publicação no arquivo publicacoesComunidade.json
   fs.writeFileSync('./publicacoesComunidade.json', JSON.stringify(publicacoesData, null, 2));
+
+  req.session.save((err) => {
+    if (err) {
+      console.error('Erro ao salvar a sessão:', err);
+      return res.status(500).send('Erro ao salvar a sessão');
+    }
+	});
 
   res.redirect(`/comunidade/${comunidadeId}`);
 });
@@ -993,6 +1046,10 @@ app.post('/salvar-comunidade', uploadComunidade.single('imagemPerfil'), (req, re
   const comunidades = require('./comunidades.json').comunidades;
   const usuarios = require('./users.json');
 
+  if (!req.session || !req.session.userId) {
+    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  }
+
   // Criar nova comunidade
   const novaComunidade = {
     id: `comunidade${comunidades.length + 1}`,
@@ -1016,6 +1073,13 @@ app.post('/salvar-comunidade', uploadComunidade.single('imagemPerfil'), (req, re
   // Salvar as comunidades e usuários nos arquivos JSON
   fs.writeFileSync('comunidades.json', JSON.stringify({ comunidades }, null, 2));
   fs.writeFileSync('users.json', JSON.stringify(usuarios, null, 2));
+
+  req.session.save((err) => {
+    if (err) {
+      console.error('Erro ao salvar a sessão:', err);
+      return res.status(500).send('Erro ao salvar a sessão');
+    }
+	});
 
   // Redirecionar para o feed
   res.redirect('/feed');
@@ -1058,6 +1122,15 @@ app.get('/procurar-comunidade', ensureAuthenticated, (req, res) => {
   //const usuario = usuarios.find(u => u.id === req.user.id);
   const comunidade = comunidades.find(c => c.id === comunidadeId);
 
+  if (!req.session || !req.session.userId) {
+    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  }
+
+  if (!req.session || !req.session.userId) {
+    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  }
+
+
   // Verifica se o retorno é um array válido
   if (!Array.isArray(comunidades)) {
     return res.status(500).send('Erro ao carregar comunidades.'); // Se não for um array, retorne erro
@@ -1087,6 +1160,7 @@ app.get('/procurar-comunidade', ensureAuthenticated, (req, res) => {
   const usersData = loadUsersFromFile(); // Função que carrega os usuários
 
   // Encontra o usuário pelo ID
+ 
   //const usuario = usersData.find(u => u.id === usuarioId);
   const usuario = usuarios.find(u => u.id === usuarioId);
   if (!usuario) {
@@ -1099,28 +1173,20 @@ app.get('/procurar-comunidade', ensureAuthenticated, (req, res) => {
     fs.writeFileSync('comunidades.json', JSON.stringify({ comunidades }, null, 2));
     fs.writeFileSync('users.json', JSON.stringify(usuarios, null, 2));
    
+    req.session.save((err) => {
+      if (err) {
+        console.error('Erro ao salvar a sessão:', err);
+        return res.status(500).send('Erro ao salvar a sessão');
+      }
+    });
+
     res.redirect('/feed'); // Redireciona para o feed após a atualização
    
   } else {
     res.redirect('/feed'); // Se algo der errado, redireciona para o feed
    }
 
-  // Salva as mudanças no arquivo `users.json`
-//  saveUsersToFile(usersData);
- // Salvar as alterações
-
-  // Responde com sucesso
- // res.json({ message: `Você agora faz parte da comunidade ${comunidadeEncontrada.nome}.` });
-  //window.location.href = '/feed';
- // adicionarComunidade(comunidadeId);
-  // Recarrega a página do perfil após a atualização
-
   
-    // Responde com o HTML atualizado para ser inserido na página
- //   res.json({ htmlAtualizado });
-
- //  res.redirect('/dados-usuario');
- // res.redirect('/feed');
 });
 
 function adicionarComunidade(comunidadeId) {
@@ -1139,55 +1205,16 @@ function adicionarComunidade(comunidadeId) {
   .catch(error => console.error('Erro ao adicionar comunidade:', error));
 }
 //-------------------------------
-//app.post('/aderir-comunidade', (req, res) => {
-//  const { comunidadeId, usuarioId } = req.body; // Obtém os IDs da comunidade e do usuário
-//// Carrega as comunidades
-//const data = loadComunidadesFromFile();
-//const comunidades = data.comunidades; // Acesse o array de comunidades
-//
-//// Encontra a comunidade
-//const comunidade = comunidades.find(c => c.id === comunidadeId);
-//
-//if (!comunidade) {
-//    return res.status(404).send('Comunidade não encontrada.');
-//}
-//
-//// Adiciona o ID do usuário aos membros da comunidade
-//if (!comunidade.membros.includes(usuarioId)) {
-//    comunidade.membros.push(usuarioId);
-//    comunidade.quantidadeMembros += 1; // Atualiza a quantidade de membros
-//    //sucesso
-//    // Salva as mudanças de volta no arquivo
-//    fs.writeFileSync(path.join(__dirname, 'comunidades.json'), JSON.stringify(data, null, 2));
-//    return res.redirect('/feed'); // Redireciona de volta ao feed
-//} else {
-//    return res.status(400).send('Você já é um membro desta comunidade.');
-//}
-//});
+
 //============
 
 // Função para carregar as comunidades de um arquivo JSON
 function loadComunidadesFromFile() {
   const data = fs.readFileSync(path.join(__dirname, 'comunidades.json'), 'utf-8');
   return JSON.parse(data);
- //    try {
- //        return JSON.parse(data); // Retorne o objeto diretamente
- //    } catch (error) {
- //        console.error('Erro ao parsear comunidades.json:', error);
- //        return { comunidades: [] }; // Retorna um objeto com um array vazio em caso de erro
- //    }
- //} else {
- //    console.warn('Arquivo comunidades.json não encontrado.');
- //    return { comunidades: [] }; // Retorna um objeto com um array vazio se o arquivo não existir
- //}
+ 
 }
 
-// Função para carregar as comunidades do arquivo
-//function loadComunidadesFromFile() {
-//  const filePath = path.join(__dirname, 'comunidades.json'); // Certifique-se de que o caminho esteja correto
-//  const data = fs.readFileSync(filePath, 'utf-8');
-//  return JSON.parse(data); // Retorna os dados parseados
-//}
 
 // Função para salvar comunidades no arquivo (sem criar uma nova chave "comunidades")
 function saveComunidadesToFile(comunidadesData) {
@@ -1199,51 +1226,6 @@ function saveUsersToFile(usersData) {
   fs.writeFileSync(path.join(__dirname, 'users.json'), JSON.stringify(usersData, null, 2));
 }
 
-// Rota para aderir à comunidade
-//app.post("/aderir-comunidade", ensureAuthenticated, (req, res) => {
-//  const userId = req.user.id; // ID do usuário autenticado
-//  const comunidadeId = req.body.comunidadeId; // ID da comunidade a ser aderida
-//
-//  if (!comunidadeId) {
-//    return res.status(400).json({ error: "ID da comunidade ausente na solicitação." });
-//  }
-//
-//  const comunidadesData  = loadComunidadesFromFile(); // Carrega as comunidades do arquivo JSON
-//  const usersData = loadUsersFromFile();
-//
-//  const comunidade = comunidadesData.comunidades.find(c => c.id === comunidadeId); // Busca a comunidade com o ID
-//
-//  if (!comunidade) {
-//    return res.status(404).json({ error: "Comunidade não encontrada." });
-//  }
-//
-//  
-//
-//   // Adiciona o usuário à lista de membros da comunidade (se ele ainda não for um membro)
-//  if (!comunidade.membros.includes(userId)) {
-//    comunidade.membros.push(userId);
-//    comunidade.quantidadeMembros += 1; // Atualiza a quantidade de membros
-//  }
-//    // Encontra o usuário pelo ID e adiciona a comunidade ao perfil do usuário
-//    const usuario = usersData.find(u => u.id === userId);
-//    if (!usuario) {
-//      throw new Error("Usuário não encontrado");
-//    }
-//     // Adiciona o ID da comunidade no perfil do usuário (se ainda não estiver presente)
-//  if (!usuario.comunidades.includes(comunidadeId)) {
-//    usuario.comunidades.push(comunidadeId);
-//  }
-//  // Adiciona o ID do usuário à lista de membros da comunidade
-//  //comunidade.membros.push(userId);
-//  
-//
-//  // Salva as mudanças no arquivo JSON
-//  saveComunidadesToFile(comunidadesData);
-//  saveUsersToFile(usersData); 
-//
-// // res.json({ message: `Você aderiu à comunidade ${comunidade.nome} com sucesso!` });
-//  res.redirect("/feed"); 
-//});
 
 
 //app.listen(3000);
