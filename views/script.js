@@ -216,43 +216,37 @@ const declarationList = document.getElementById('declaration-list');
 
 declarationForm.addEventListener('submit', function (event) {
     event.preventDefault(); // Evita o envio do formulário
-  
+
     // Obtém o texto da declaração do textarea
     const declarationText = declarationTextarea.value;
-  
+
     // Verifica se a declaração não está vazia
     if (declarationText.trim() !== '') {
-      // Envia a declaração para o servidor usando fetch
-      fetch('/salvar-declaracao', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ declaration: declarationText })
-      })
-      .then(response => {
-        if (response.status === 401) {
-          // Redirecionar para o login ou exibir mensagem de desconexão
-          alert('Sua sessão expirou. Por favor, faça login novamente.');
-          window.location.href = '/login';  // Redirecionar para login
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Limpa o textarea da declaração
-        declarationTextarea.value = '';
-  
-        // Adiciona a declaração à lista de declarações na página
-        const declarationItem = document.createElement('li');
-        declarationItem.textContent = data.declaration;
-        declarationList.appendChild(declarationItem);
-      })
-      .catch(error => console.error('Erro ao salvar declaração:', error));
+        // Envia a declaração para o servidor usando fetch
+        fetch('/salvar-declaracao', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ declaration: declarationText })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Limpa o textarea da declaração
+            declarationTextarea.value = '';
+
+            // Adiciona a declaração à lista de declarações na página
+            const declarationItem = document.createElement('li');
+            declarationItem.textContent = data.declaration;
+            declarationList.appendChild(declarationItem);
+        })
+        .catch(error => console.error('Erro ao salvar declaração:', error));
     } else {
-      // Caso o textarea esteja vazio, exibe uma mensagem de erro
-      alert('Digite uma declaração válida.');
+        // Caso o textarea esteja vazio, exibe uma mensagem de erro
+        alert('Digite uma declaração válida.');
     }
-  });
+});
+
 
 //=======================================================================
 

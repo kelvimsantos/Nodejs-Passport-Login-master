@@ -562,7 +562,14 @@ app.post('/salvar-publicacao', ensureAuthenticated, (req, res) => {
     return res.status(404).json({ error: 'Usuário não encontrado.' });
   }
 
- 
+ // if (!currentUser.publicacoes) {
+ //   currentUser.publicacoes = [];
+ // }
+
+  // Adiciona a nova publicação
+ // currentUser.publicacoes.push({
+  //  conteudo: publicacao,
+   // data: new Date().toISOString()
    const newPublicacao = {
     conteudo: publicacao,
     data: new Date().toISOString(),  // Data atual em formato ISO
