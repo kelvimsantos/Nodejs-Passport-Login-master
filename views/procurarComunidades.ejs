@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<div lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Procurar Comunidades</title>
+  <link rel="stylesheet" href="./procurar-comunidade.css">
+</head>
+<div id="comunity" class="comunity">
+<form id="buscarComunidades" action="javascript:void(0);">
+    <input type="text" id="nomeComunidade" placeholder="Digite o nome da comunidade">
+    <button type="submit">Buscar</button>
+  </form>
+  
+  <!-- Local onde as comunidades serão exibidas -->
+  <div id="resultadoComunidades"></div>
+</div>
+</html>
+  <script>
+        document.getElementById('buscarComunidades').addEventListener('submit', function() {
+      const nomeComunidade = document.getElementById('nomeComunidade').value;
+
+      // Faz a requisição para o backend buscando as comunidades
+      fetch(`/FindComunidades?nome=${encodeURIComponent(nomeComunidade)}`)
+        .then(response => response.json())
+        .then(data => {
+          // Limpa resultados anteriores
+          const resultadoDiv = document.getElementById('resultadoComunidades');
+          resultadoDiv.innerHTML = '';
+
+          if (data.length === 0) {
+            resultadoDiv.innerHTML = '<p>Nenhuma comunidade encontrada.</p>';
+          } else {
+            // Exibir as comunidades
+            data.forEach(comunidade => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <div class="comunidade-item">
+                        <a href="/comunidade/${comunidade.id}">
+                            <img src="${comunidade.imagemPerfil}" alt="Imagem da comunidade" class="comunidade-img">
+                            <div class="comunidade-info">
+                                <h3>${comunidade.nome}</h3>
+                                <p>Membros: ${comunidade.membros.length}</p>
+                            </div>
+                        </a>
+                    </div>
+                `;
+                resultadoDiv.appendChild(div);
+            });
+          }
+        })
+        .catch(error => console.error('Erro ao buscar comunidades:', error));
+    });
+</script>

@@ -17,22 +17,18 @@
       <img class="profile-img" src="<%= amigoProfileImagePath  %>" alt="Foto de Perfil">
       
       <h1><%= amigoName %></h1>
-      <button id="amigoButton" onclick="toggleAmizade('<%= amigo.id %>')">
+      <button id="amigoButton" data-friend-id="<%= amigo.id %>">
         <%= (user.amigos && Array.isArray(user.amigos) && user.amigos.includes(amigo.id)) ? 'Remover Amigo' : 'Adicionar Amigo' %>
       </button>
+      
     </div>
+    
   </div>
 
   <!-- Seção de Declarações -->
   <div id="declarations-section">
     <h1>DIARIO DE DECLARAÇÕES</h1>
     <h2>Declarações</h2>
-  
-    <!-- Formulário para nova declaração (se aplicável para o amigo)
-    <form id="declaration-form" action="/adicionar-declaracao" method="POST">
-      <textarea class="declaration" id="declaration" name="declaration"></textarea>
-      <button type="submit">Publicar</button>
-    </form> -->
   
     <!-- Lista de declarações -->
     <ul id="declaration-list">
@@ -42,46 +38,51 @@
     </ul>
   </div>
 
-<!-- Seção de Comunidades -->
-<h3>Comunidades</h3>
-<div class="community-container">
-  <ul class="community-grid">
-    <% if (comunidadesComImagens.length > 0) { %>
-      <% comunidadesComImagens.forEach(comunidade => { %>
-        <li class="community">
-          <a href="/comunidade/<%= comunidade.id %>">
-            <img src="<%= comunidade.imagemPerfilPath %>" alt="<%= comunidade.nome %>">
-            <p><%= comunidade.nome %></p>
-          </a>
-        </li>
-      <% }) %>
-    <% } else { %>
-      <li>Usuário não participa de nenhuma comunidade.</li>
-    <% } %>
-  </ul>
-</div>
-
+  <!-- Seção de Comunidades -->
+  <h3>Comunidades</h3>
+  <div class="community-container">
+    <ul class="community-grid">
+      <% if (comunidadesComImagens.length > 0) { %>
+        <% comunidadesComImagens.forEach(comunidade => { %>
+          <li class="community">
+            <a href="/comunidade/<%= comunidade.id %>">
+              <img src="<%= comunidade.imagemPerfilPath %>" alt="<%= comunidade.nome %>">
+              <p><%= comunidade.nome %></p>
+            </a>
+          </li>
+        <% }) %>
+      <% } else { %>
+        <li>Usuário não participa de nenhuma comunidade.</li>
+      <% } %>
     </ul>
   </div>
-<script>
-  function toggleAmizade(friendId) {
-    const isAmigo = <%= user.amigos && user.amigos.includes(amigo.id) %>;
-    const url = isAmigo ? '/remover-amigo' : '/adicionar-amigo';
 
-    fetch(url, {
+</div>
+
+<script>
+  document.getElementById('amigoButton').addEventListener('click', function() {
+    const friendId = this.getAttribute('data-friend-id');
+    const action = this.innerText === 'Adicionar Amigo' ? 'adicionar' : 'remover';
+
+    fetch(`/amigo/${action}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ friendId: friendId })
+      body: JSON.stringify({ friendId })
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data.message);
-      window.location.reload();
+      if (data.success) {
+        // Alterna o texto do botão conforme a ação
+        this.innerText = action === 'adicionar' ? 'Remover Amigo' : 'Adicionar Amigo';
+      } else {
+        console.error('Erro:', data.error);
+      }
     })
     .catch(error => console.error('Erro ao atualizar amizade:', error));
-  }
+  });
 </script>
+
 </body>
 </html>

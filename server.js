@@ -16,6 +16,7 @@ const session = require('express-session');
 const methodOverride = require('method-override');
 const fs = require('fs');
 
+
 //const userDoc = require('./users.json');
 
 const EventEmitter = require('events');
@@ -27,6 +28,7 @@ const port = 3000;
 const initializePassport = require('./passport-config');
 const multer = require('multer');
 const users = loadUsersFromFile(); // Carrega usuários do arquivo JSON
+
 // Middleware para fazer o parse do corpo das solicitações como JSON
 app.use(express.static('public')); // Para servir arquivos estáticos
 app.use(bodyParser.json());
@@ -68,7 +70,7 @@ app.use(session({
   cookie: {  maxAge: 60 * 60 * 1000,     // 1 hora de duração da sessão
     secure: false,              // Defina `true` se estiver usando HTTPS
     httpOnly: true,             // Protege contra scripts JavaScript acessarem o cookie
-    sameSite: 'lax'          // Garante que os cookies sejam enviados apenas para o mesmo site (ajuda na segurança)
+    sameSite: 'strict'          // Garante que os cookies sejam enviados apenas para o mesmo site (ajuda na segurança)
 }
   //cookie: { secure: false } // Se estiver usando HTTP. Para HTTPS, defina como true
 }));
@@ -371,10 +373,14 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
 
 
 app.delete('/logout', (req, res) => {
-  //req.logOut();
-  res.redirect('/login');
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Erro ao destruir a sessão:', err);
+      return res.status(500).send('Erro ao deslogar.');
+    }
+    res.redirect('/login');
+  });
 });
-
 
 function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
@@ -499,9 +505,9 @@ app.post('/adicionar-publicacao', ensureAuthenticated, (req, res) => {
   // Adiciona a nova publicação ao campo de publicações do usuário atual
   currentUser.publicacoes.push(novaPublicacao);
   
-  if (!req.session || !req.session.userId) {
-    return res.status(401).send('Você foi desconectado. Faça login novamente.');
-  }
+//  if (!req.session || !req.session.userId) {
+//    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+//  }
 
   // Atualiza o arquivo de usuários com a nova publicação adicionada
   const users = loadUsersFromFile();
@@ -537,9 +543,9 @@ function gerarIdUnico() {
 // Rota para salvar a publicação do usuário
 app.post('/salvar-publicacao', ensureAuthenticated, (req, res) => {
   const publicacao = req.body.publicacao;
-  if (!req.session || !req.session.userId) {
-    return res.status(401).send('Você foi desconectado. Faça login novamente.');
-  }
+ // if (!req.session || !req.session.userId) {
+ //   return res.status(401).send('Você foi desconectado. Faça login novamente.');
+ // }
 
   if (!publicacao) {
     return res.status(400).json({ error: 'A publicação não pode estar vazia.' });
@@ -558,9 +564,9 @@ app.post('/salvar-publicacao', ensureAuthenticated, (req, res) => {
 
   const currentUser = users.find(user => user.id === userId);
 
-  if (!currentUser) {
-    return res.status(404).json({ error: 'Usuário não encontrado.' });
-  }
+ // if (!currentUser) {
+ //   return res.status(404).json({ error: 'Usuário não encontrado.' });
+ // }
 
  // if (!currentUser.publicacoes) {
  //   currentUser.publicacoes = [];
@@ -682,20 +688,16 @@ app.post('/salvar-usuario', (req, res) => {
 });
 
 
-// Atualização na rota /adicionar-amigo para incluir lista de amigos
-app.post("/adicionar-amigo", ensureAuthenticated, (req, res) => {
+
+app.post("/amigo/adicionar", ensureAuthenticated, (req, res) => {
   const userId = req.user.id;
   const friendId = req.body.friendId;
-
-  if (!req.session || !req.session.userId) {
-    return res.status(401).send('Você foi desconectado. Faça login novamente.');
-  }
 
   if (!friendId) {
     return res.status(400).json({ error: "ID do amigo ausente na solicitação." });
   }
-  const users = loadUsersFromFile(); // Carrega usuários do arquivo JSON
 
+  const users = loadUsersFromFile(); // Carrega todos os usuários do arquivo JSON
   const currentUser = users.find(user => user.id === userId);
   const friendUser = users.find(user => user.id === friendId);
 
@@ -703,50 +705,126 @@ app.post("/adicionar-amigo", ensureAuthenticated, (req, res) => {
     return res.status(404).json({ error: "Amigo não encontrado." });
   }
 
+  // Garantindo que ambos tenham listas de amigos
   if (!currentUser.amigos) {
     currentUser.amigos = [];
   }
+  if (!friendUser.amigos) {
+    friendUser.amigos = [];
+  }
 
+  // Verifica se já são amigos
   if (currentUser.amigos.includes(friendId)) {
     return res.status(400).json({ error: "Este usuário já é seu amigo." });
   }
 
+  // Adiciona amigo à lista de ambos
   currentUser.amigos.push(friendId);
+  friendUser.amigos.push(userId);
+
+  // Salva as alterações no arquivo JSON
   saveUsersToFile(users);
 
-  if (currentUser && !currentUser.amigos.includes(friendId)) {
-    currentUser.amigos.push(friendId);
-    saveUsersToFile(users);
-    // Emitir evento de adição de amigo
-    eventos.emit('amigoAdicionado', userId, friendId);
-// Retorna os amigos atualizados para o frontend
-res.json({ success: true, amigos: user.amigos });
- // Salva as alterações no arquivo JSON
- fs.writeFileSync('users.json', JSON.stringify(users, null, 2));//-----------------------------------------------------------
+  return res.json({ success: true, amigos: currentUser.amigos });
+});
 
-//adicionarAmigo(friendId);
-req.session.save((err) => {
-  if (err) {
-    console.error('Erro ao salvar a sessão:', err);
-    return res.status(500).send('Erro ao salvar a sessão');
+app.post("/amigo/remover", ensureAuthenticated, (req, res) => {
+  const userId = req.user.id;
+  const friendId = req.body.friendId;
+
+  if (!friendId) {
+    return res.status(400).json({ error: "ID do amigo ausente na solicitação." });
   }
-     // Recarrega a página do perfil após a atualização
-  res.send(`
-    <html>
-    <head>
-      <script>
-        window.location.href = "/perfil";
-      </script>
-    </head>
-    <body>
-      <p>Atualizando...</p>
-    </body>
-    </html>
-  `);
-});
-  res.json({ message: "Amigo adicionado com sucesso." });
+
+  const users = loadUsersFromFile(); // Carrega todos os usuários do arquivo JSON
+  const currentUser = users.find(user => user.id === userId);
+  const friendUser = users.find(user => user.id === friendId);
+
+  if (!friendUser) {
+    return res.status(404).json({ error: "Amigo não encontrado." });
   }
+
+  // Verifica se realmente são amigos
+  if (!currentUser.amigos || !currentUser.amigos.includes(friendId)) {
+    return res.status(400).json({ error: "Este usuário não é seu amigo." });
+  }
+
+  // Remove o ID do amigo da lista do usuário atual
+  currentUser.amigos = currentUser.amigos.filter(id => id !== friendId);
+
+  // Remove o ID do usuário atual da lista de amigos do amigo
+  friendUser.amigos = friendUser.amigos.filter(id => id !== userId);
+
+  // Salva as alterações no arquivo JSON
+  saveUsersToFile(users);
+
+  return res.json({ success: true, amigos: currentUser.amigos });
 });
+// Atualização na rota /adicionar-amigo para incluir lista de amigos
+//app.post("/adicionar-amigo", ensureAuthenticated, (req, res) => {
+//  const userId = req.user.id;
+//  const friendId = req.body.friendId;
+//
+//  if (!req.session || !req.session.userId) {
+//    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+//  }
+//
+//  if (!friendId) {
+//    return res.status(400).json({ error: "ID do amigo ausente na solicitação." });
+//  }
+//  const users = loadUsersFromFile(); // Carrega usuários do arquivo JSON
+//
+//  const currentUser = users.find(user => user.id === userId);
+//  const friendUser = users.find(user => user.id === friendId);
+//
+//  if (!friendUser) {
+//    return res.status(404).json({ error: "Amigo não encontrado." });
+//  }
+//
+//  if (!currentUser.amigos) {
+//    currentUser.amigos = [];
+//  }
+//
+//  if (currentUser.amigos.includes(friendId)) {
+//    return res.status(400).json({ error: "Este usuário já é seu amigo." });
+//  }
+//
+//  currentUser.amigos.push(friendId);
+//  saveUsersToFile(users);
+//
+//  if (currentUser && !currentUser.amigos.includes(friendId)) {
+//    currentUser.amigos.push(friendId);
+//    saveUsersToFile(users);
+//    // Emitir evento de adição de amigo
+//    eventos.emit('amigoAdicionado', userId, friendId);
+//// Retorna os amigos atualizados para o frontend
+//res.json({ success: true, amigos: user.amigos });
+// // Salva as alterações no arquivo JSON
+// fs.writeFileSync('users.json', JSON.stringify(users, null, 2));//-----------------------------------------------------------
+//
+////adicionarAmigo(friendId);
+//req.session.save((err) => {
+//  if (err) {
+//    console.error('Erro ao salvar a sessão:', err);
+//    return res.status(500).send('Erro ao salvar a sessão');
+//  }
+//     // Recarrega a página do perfil após a atualização
+//  res.send(`
+//    <html>
+//    <head>
+//      <script>
+//        window.location.href = "/perfil";
+//      </script>
+//    </head>
+//    <body>
+//      <p>Atualizando...</p>
+//    </body>
+//    </html>
+//  `);
+//});
+//  res.json({ message: "Amigo adicionado com sucesso." });
+//  }
+//});
 
 
 app.post("/buscar-usuario", ensureAuthenticated, (req, res) => {
@@ -779,6 +857,72 @@ function carregarJson(filePath) {
     });
   });
 }
+
+app.post("/amigo/adicionar", ensureAuthenticated, (req, res) => {
+  const userId = req.user.id;
+  const friendId = req.body.friendId;
+
+  if (!friendId) {
+    return res.status(400).json({ error: "ID do amigo ausente na solicitação." });
+  }
+
+  const users = loadUsersFromFile(); // Carrega usuários do arquivo JSON
+  const currentUser = users.find(user => user.id === userId);
+  const friendUser = users.find(user => user.id === friendId);
+
+  if (!friendUser) {
+    return res.status(404).json({ error: "Amigo não encontrado." });
+  }
+
+  // Verificar se já são amigos
+  if (currentUser.amigos.includes(friendId)) {
+    return res.status(400).json({ error: "Este usuário já é seu amigo." });
+  }
+
+  // Adicionar o amigo
+  currentUser.amigos.push(friendId);
+  saveUsersToFile(users);
+
+  // Emitir evento de adição de amigo
+  eventos.emit('amigoAdicionado', userId, friendId);
+
+  // Retornar o sucesso
+  res.json({ success: true, amigos: currentUser.amigos });
+});
+
+
+app.post("/amigo/remover", ensureAuthenticated, (req, res) => {
+  const userId = req.user.id;
+  const friendId = req.body.friendId;
+
+  if (!friendId) {
+    return res.status(400).json({ error: "ID do amigo ausente na solicitação." });
+  }
+
+  const users = loadUsersFromFile(); // Carrega usuários do arquivo JSON
+  const currentUser = users.find(user => user.id === userId);
+  const friendUser = users.find(user => user.id === friendId);
+
+  if (!friendUser) {
+    return res.status(404).json({ error: "Amigo não encontrado." });
+  }
+
+  // Verificar se são amigos
+  const friendIndex = currentUser.amigos.indexOf(friendId);
+  if (friendIndex === -1) {
+    return res.status(400).json({ error: "Este usuário não é seu amigo." });
+  }
+
+  // Remover o amigo
+  currentUser.amigos.splice(friendIndex, 1);
+  saveUsersToFile(users);
+
+  // Emitir evento de remoção de amigo
+  eventos.emit('amigoRemovido', userId, friendId);
+
+  // Retornar o sucesso
+  res.json({ success: true, amigos: currentUser.amigos });
+});
 
 
 app.get('/perfil/:id', (req, res) => {
@@ -848,6 +992,72 @@ app.get('/perfil/:id', (req, res) => {
 });
 
 
+//procurar comunidades
+// Função para ler o arquivo JSON das comunidades
+function carregarComunidades() {
+  const caminhoArquivo = path.join(__dirname, 'comunidades.json');
+  const comunidades = JSON.parse(fs.readFileSync(caminhoArquivo, 'utf-8'));
+  return comunidades;
+}
+
+// Rota para procurar comunidades
+// Rota para procurar comunidades
+app.get('/FindComunidades', (req, res) => {
+  const query = req.query.nome || '';
+  let comunidades = carregarComunidades().comunidades; // Acessa o array de comunidades
+
+  // Atualizar o caminho da imagem para cada comunidade
+  comunidades = comunidades.map(comunidade => {
+    return {
+      ...comunidade,
+      imagemPerfil: comunidade.imagemPerfil.replace('./views/', './') // Remove './views/' do caminho
+    };
+  });
+
+  let comunidadesFiltradas;
+
+  if (query.trim() === '') {
+    // Se não há busca, retorna todas as comunidades em ordem alfabética
+    comunidadesFiltradas = comunidades.sort((a, b) => a.nome.localeCompare(b.nome));
+  } else {
+    // Filtrar comunidades que contenham a string no nome
+    comunidadesFiltradas = comunidades.filter(c => c.nome.toLowerCase().includes(query.toLowerCase()));
+  }
+
+  res.json(comunidadesFiltradas);
+});
+
+// Ir para a página "encontrar comunidades"
+app.get('/encontrar-comunidades', (req, res) => {
+  res.render('procurarComunidades');
+});
+
+
+
+// Rota para procurar usuários
+app.get('/FindUsers', (req, res) => {
+  const query = req.query.nome || '';
+  let users = loadUsersFromFile(); // Função que carrega o JSON de usuários
+
+  let usuariosFiltrados;
+
+  if (query.trim() === '') {
+    // Se não há busca, retorna todos os usuários em ordem alfabética
+    usuariosFiltrados = users.sort((a, b) => a.name.localeCompare(b.name));
+  } else {
+    // Filtrar usuários que contenham a string no nome
+    usuariosFiltrados = users.filter(user => user.name.toLowerCase().includes(query.toLowerCase()));
+  }
+
+  res.json(usuariosFiltrados);
+});
+
+
+app.get('/procurar-usuarios', (req, res) => {
+  res.render('procurarUsusarios'); // Renderiza o EJS da página de busca de usuários
+});
+
+
 app.get('/comunidade/:id', ensureAuthenticated, (req, res) => {
   const comunidadeId = req.params.id;
   const comunidadesData = require('./comunidades.json');
@@ -888,11 +1098,12 @@ app.get('/comunidade/:id', ensureAuthenticated, (req, res) => {
 app.post('/entrar-comunidade', ensureAuthenticated, (req, res) => {
   const comunidadeId = req.body.comunidadeId;
   const comunidadesData = require('./comunidades.json');
+  const usersData = require('./users.json'); // Carrega os dados dos usuários
   const comunidade = comunidadesData.comunidades.find(c => c.id === comunidadeId);
-
-  if (!req.session || !req.session.userId) {
-    return res.status(401).send('Você foi desconectado. Faça login novamente.');
-  }
+  const user = usersData.find(u => u.id === req.user.id); // Busca o usuário atua
+//  if (!req.session || !req.session.userId) {
+//    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+//  }
 
   if (!comunidade) {
     return res.status(404).json({ message: 'Comunidade não encontrada' });
@@ -901,6 +1112,12 @@ app.post('/entrar-comunidade', ensureAuthenticated, (req, res) => {
   if (!comunidade.membros.includes(req.user.id)) {
     comunidade.membros.push(req.user.id);
     fs.writeFileSync('./comunidades.json', JSON.stringify(comunidadesData, null, 2));
+ 
+    // Verifica se o usuário já está na lista de comunidades, caso não, adiciona
+    if (!user.comunidades.includes(comunidadeId)) {
+      user.comunidades.push(comunidadeId); 
+      fs.writeFileSync('./users.json', JSON.stringify(usersData, null, 2)); // Salva as alterações no arquivo de usuários
+    }
   }
 
   req.session.save((err) => {
@@ -916,7 +1133,9 @@ app.post('/entrar-comunidade', ensureAuthenticated, (req, res) => {
 app.post('/sair-comunidade', ensureAuthenticated, (req, res) => {
   const comunidadeId = req.body.comunidadeId;
   const comunidadesData = require('./comunidades.json');
+  const usersData = require('./users.json'); // Carrega os dados dos usuários
   const comunidade = comunidadesData.comunidades.find(c => c.id === comunidadeId);
+  const user = usersData.find(u => u.id === req.user.id); // Busca o usuário atual
 
   if (!comunidade) {
     return res.status(404).json({ message: 'Comunidade não encontrada' });
@@ -924,6 +1143,10 @@ app.post('/sair-comunidade', ensureAuthenticated, (req, res) => {
 
   comunidade.membros = comunidade.membros.filter(id => id !== req.user.id);
   fs.writeFileSync('./comunidades.json', JSON.stringify(comunidadesData, null, 2));
+
+  user.comunidades = user.comunidades.filter(cId => cId !== comunidadeId); 
+  fs.writeFileSync('./users.json', JSON.stringify(usersData, null, 2)); // Salva as alterações no arquivo de usuários
+
 
   res.json({ message: 'Você saiu da comunidade!' });
 });
@@ -952,9 +1175,9 @@ app.post('/comunidade/:id/publicar', ensureAuthenticated, (req, res) => {
 
   publicacoesData.publicacoes.push(novaPublicacao);
   
-  if (!req.session || !req.session.userId) {
-    return res.status(401).send('Você foi desconectado. Faça login novamente.');
-  }
+  //if (!req.session || !req.session.userId) {
+  //  return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  //}
   // Salvar a nova publicação no arquivo publicacoesComunidade.json
   fs.writeFileSync('./publicacoesComunidade.json', JSON.stringify(publicacoesData, null, 2));
 
@@ -1013,7 +1236,7 @@ const storageComunidade = multer.diskStorage({
 
 const uploadComunidade = multer({ storage: storageComunidade });
 
-// Rota para renderizar o formulário de criação de comunidade
+// Rota para ir apra pagina do feed pra ela renderizar o formulário de criação de comunidade
 app.get('/criar-comunidade', (req, res) => {
   res.render('criarComunidade', { user: req.user });
 });
@@ -1029,7 +1252,7 @@ function validateImageProportion(image) {
 
       // Defina a proporção máxima e mínima que considera aceitável
       const minAspectRatio = 0.75; // Largura/Altura mínima aceitável
-      const maxAspectRatio = 1.33; // Largura/Altura máxima aceitável
+      const maxAspectRatio = 10.33; // Largura/Altura máxima aceitável
 
       if (aspectRatio < minAspectRatio || aspectRatio > maxAspectRatio) {
           alert("Imagem desproporcional. Por favor, envie uma imagem mais adequada.");
@@ -1047,9 +1270,7 @@ app.post('/salvar-comunidade', uploadComunidade.single('imagemPerfil'), (req, re
   const comunidades = require('./comunidades.json').comunidades;
   const usuarios = require('./users.json');
 
-  if (!req.session || !req.session.userId) {
-    return res.status(401).send('Você foi desconectado. Faça login novamente.');
-  }
+ 
 
   // Criar nova comunidade
   const novaComunidade = {
@@ -1071,6 +1292,9 @@ app.post('/salvar-comunidade', uploadComunidade.single('imagemPerfil'), (req, re
   usuario.comunidades.push(novaComunidade.id);
   usuario.comunidadesDono.push(novaComunidade.id);
 
+ // if (!req.session || !req.session.userId) {
+ //   return res.status(401).send('Você foi desconectado. Faça login novamente.');
+ // }
   // Salvar as comunidades e usuários nos arquivos JSON
   fs.writeFileSync('comunidades.json', JSON.stringify({ comunidades }, null, 2));
   fs.writeFileSync('users.json', JSON.stringify(usuarios, null, 2));

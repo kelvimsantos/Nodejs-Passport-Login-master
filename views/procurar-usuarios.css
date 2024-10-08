@@ -1,0 +1,31 @@
+.userCard {
+    background-color: black;
+    border: 2px solid red;
+    padding: 15px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.userCard img {
+    display: flex;
+    width: 100px; /* Tamanho da imagem */
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 15px;
+    border: 2px solid #ccc;
+    clip-path: circle(50% at 50% 50%);
+}
+
+.userCard h3, .userCard p {
+    color: white;
+    margin: 0;
+}
+
+@media (max-width: 1024px) {
+    .userCard img {
+        max-width: 80px; /* Reduz o tamanho da imagem em telas menores */
+    }
+}

@@ -1,0 +1,31 @@
+.comunidade-item {
+    display: flex; /* Para alinhar a imagem e o texto lado a lado */
+    align-items: center; /* Centraliza verticalmente os itens */
+    border: 2px solid #ccc; /* Borda ao redor de cada comunidade */
+    border-radius: 8px; /* Bordas arredondadas */
+    padding: 10px; /* Espaçamento interno */
+    margin-bottom: 10px; /* Espaçamento entre comunidades */
+    background-color: #222; /* Fundo escuro para o item da comunidade */
+}
+
+.comunidade-img {
+    width: 100px; /* Largura da imagem */
+    height: 100px; /* Altura da imagem */
+    object-fit: cover; /* Corta a imagem para manter a proporção */
+    border-radius: 50%; /* Imagem circular */
+    margin-right: 10px; /* Espaçamento entre a imagem e o texto */
+    border: 2px solid #ccc; /* Borda da imagem */
+}
+
+.comunidade-info {
+    color: #fff; /* Cor do texto */
+}
+
+.comunidade-info h3 {
+    margin: 0; /* Remove margens padrão do título */
+    font-size: 1.2em; /* Aumenta o tamanho da fonte do título */
+}
+
+.comunidade-info p {
+    margin: 0; /* Remove margens padrão do parágrafo */
+}

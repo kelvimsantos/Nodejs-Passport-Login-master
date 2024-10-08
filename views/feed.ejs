@@ -24,7 +24,7 @@
                 <!-- Outras informações do perfil, como status, número de amigos, etc. -->
                 <div>   <img class="left-image" src="esq.png" alt="Foto de dono"></div>
             </div>
-
+            <a href="/procurar-usuarios" class="btn-procurar-usuarios">Procurar Usuários</a>
             <div>
                 <!-- Formulário de busca de amigos -->
                 <form id="search-form">
@@ -147,8 +147,14 @@
         </form>
       <!-- Aqui pode ser onde os resultados da busca vão aparecer -->
    <!-- Resultados da busca de comunidades -->
+   <button id="btnEncontrarComunidades">Encontrar todas as comunidades</button>
 
-
+   <script>
+    document.getElementById('btnEncontrarComunidades').addEventListener('click', function() {
+    // Redireciona para a página de busca de comunidades
+    window.location.href = '/encontrar-comunidades';
+    });
+  </script>
     </div>
 </body>
 </html>

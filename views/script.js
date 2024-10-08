@@ -367,6 +367,11 @@ window.addEventListener('load', function() {
 });
 
 
+//procurar comundiades 
+document.getElementById('btnEncontrarComunidades').addEventListener('click', function() {
+    // Redireciona para a página de busca de comunidades
+    window.location.href = '/procurarComunidades';
+  });
 
 //adicionar amigo ----------------------------------
 //botao 
@@ -443,4 +448,6 @@ document.getElementById('search-form').addEventListener('submit', function(event
         }
     });
     });
+
+
 });
