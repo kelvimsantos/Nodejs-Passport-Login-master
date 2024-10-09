@@ -84,7 +84,11 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'fallbackSecret',
   resave:false,
   saveUninitialized:false,
-  cookie: {maxAge:60000}
+  cookie: {
+    maxAge: 60 * 60 * 1000,    // Sessão válida por 1 hora (ajuste conforme necessário)
+    secure: false,             // Se estiver usando HTTPS, defina como 'true'
+    httpOnly: true,            // Protege o cookie para que ele só seja acessível pelo servidor
+  }
 }));
 
 
@@ -536,6 +540,8 @@ app.post('/adicionar-publicacao', ensureAuthenticated, (req, res) => {
     }
   });
 
+// Força a sessão a ser salva novamente, caso tenha sido modificada
+req.session.touch();
 
   req.session.save((err) => {
   if (err) {
@@ -599,14 +605,17 @@ app.post('/adicionar-publicacao', ensureAuthenticated, (req, res) => {
 //  });
 
 // Salva o arquivo JSON atualizado com todos os usuários
-try {
-  fs.writeFileSync(path.join(__dirname, 'users.json'), JSON.stringify(users, null, 2), 'utf-8');
-  console.log('Publicação salva com sucesso!');
-  res.status(200).json({ message: 'Publicação salva com sucesso!' });
-} catch (error) {
-  console.error('Erro ao salvar o arquivo JSON:', error);
-  return res.status(500).json({ error: 'Erro ao salvar a publicação.' });
-}
+  try {
+    fs.writeFileSync(path.join(__dirname, 'users.json'), JSON.stringify(users, null, 2), 'utf-8');
+    console.log('Publicação salva com sucesso!');
+    res.status(200).json({ message: 'Publicação salva com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao salvar o arquivo JSON:', error);
+    return res.status(500).json({ error: 'Erro ao salvar a publicação.' });
+  }
+
+  // Força a sessão a ser salva novamente, caso tenha sido modificada
+  req.session.touch();
 
   req.session.save((err) => {
   if (err) {
@@ -614,7 +623,7 @@ try {
     return res.status(500).send('Erro ao salvar a sessão');
   }
   });
- // res.status(200).json({ message: 'Publicação salva com sucesso!' });
+  res.status(200).json({ message: 'Publicação salva com sucesso!' });
 });
 
   //=================================================================
