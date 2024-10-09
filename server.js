@@ -31,7 +31,11 @@ const users = loadUsersFromFile(); // Carrega usuários do arquivo JSON
 
 // Middleware para fazer o parse do corpo das solicitações como JSON
 app.use(express.static('public')); // Para servir arquivos estáticos
-app.use(bodyParser.json());
+
+//app.use(bodyParser.json());
+// Configuração do body-parser para lidar com requisições POST
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use('/data', express.static(path.join(__dirname, 'view/data'))); // Servir arquivos estáticos
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Caminho para o arquivo JSON de publicações
@@ -62,19 +66,26 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/views'));
 app.use(express.urlencoded({ extended: false }));
 app.use(flash());
-app.use(session({
-  //secret: process.env.SESSION_SECRET,
-  secret: process.env.SESSION_SECRET || 'fallbackSecret', // fallback em caso de não encontrar a variável
-  resave: false,
-  saveUninitialized: false,
-  cookie: {  maxAge: 60 * 60 * 1000,     // 1 hora de duração da sessão
-    secure: false,              // Defina `true` se estiver usando HTTPS
-    httpOnly: true,             // Protege contra scripts JavaScript acessarem o cookie
-    sameSite: 'strict'          // Garante que os cookies sejam enviados apenas para o mesmo site (ajuda na segurança)
-}
-  //cookie: { secure: false } // Se estiver usando HTTP. Para HTTPS, defina como true
-}));
 
+//app.use(session({
+//  //secret: process.env.SESSION_SECRET,
+//  secret: process.env.SESSION_SECRET || 'fallbackSecret', // fallback em caso de não encontrar a variável
+//  resave: false,
+//  saveUninitialized: false,
+//  cookie: {  maxAge: 60 * 60 * 1000,     // 1 hora de duração da sessão
+//    secure: false,              // Defina `true` se estiver usando HTTPS
+//    httpOnly: true,             // Protege contra scripts JavaScript acessarem o cookie
+//    sameSite: 'strict'          // Garante que os cookies sejam enviados apenas para o mesmo site (ajuda na segurança)
+//}
+  //cookie: { secure: false } // Se estiver usando HTTP. Para HTTPS, defina como true
+//}));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'fallbackSecret',
+  resave:false,
+  saveUninitialized:false,
+  cookie: {maxAge:60000}
+}));
 
 
 app.use(passport.initialize());
@@ -505,9 +516,9 @@ app.post('/adicionar-publicacao', ensureAuthenticated, (req, res) => {
   // Adiciona a nova publicação ao campo de publicações do usuário atual
   currentUser.publicacoes.push(novaPublicacao);
   
-//  if (!req.session || !req.session.userId) {
-//    return res.status(401).send('Você foi desconectado. Faça login novamente.');
-//  }
+  //  if (!req.session || !req.session.userId) {
+  //    return res.status(401).send('Você foi desconectado. Faça login novamente.');
+  //  }
 
   // Atualiza o arquivo de usuários com a nova publicação adicionada
   const users = loadUsersFromFile();
@@ -517,31 +528,31 @@ app.post('/adicionar-publicacao', ensureAuthenticated, (req, res) => {
     writeUsers(users); // Salva os usuários atualizados
   }
 
-// Atualiza as publicações dos amigos
-currentUser.amigos.forEach(amigoId => {
-  const amigo = users.find(user => user.id === amigoId);
-  if (amigo) {
-    amigo.publicacoesAmigos.push(novaPublicacao); // Adiciona a publicação ao campo `publicacoesAmigos`
-  }
-});
+  // Atualiza as publicações dos amigos
+  currentUser.amigos.forEach(amigoId => {
+    const amigo = users.find(user => user.id === amigoId);
+    if (amigo) {
+      amigo.publicacoesAmigos.push(novaPublicacao); // Adiciona a publicação ao campo `publicacoesAmigos`
+    }
+  });
 
 
-req.session.save((err) => {
+  req.session.save((err) => {
   if (err) {
     console.error('Erro ao salvar a sessão:', err);
     return res.status(500).send('Erro ao salvar a sessão');
   }
-});
+  });
   // Redireciona de volta ao feed para exibir a nova publicação
   res.redirect('/feed');
-});
+  });
 
-function gerarIdUnico() {
+  function gerarIdUnico() {
   return '_' + Math.random().toString(36).substr(2, 9);
-}
-//xxxx
-// Rota para salvar a publicação do usuário
-app.post('/salvar-publicacao', ensureAuthenticated, (req, res) => {
+  }
+  //xxxx
+  // Rota para salvar a publicação do usuário
+  app.post('/salvar-publicacao', ensureAuthenticated, (req, res) => {
   const publicacao = req.body.publicacao;
  // if (!req.session || !req.session.userId) {
  //   return res.status(401).send('Você foi desconectado. Faça login novamente.');
@@ -563,40 +574,41 @@ app.post('/salvar-publicacao', ensureAuthenticated, (req, res) => {
   }
 
   const currentUser = users.find(user => user.id === userId);
+  if (!currentUser) {
+    return res.status(404).json({ error: 'Usuário não encontrado.' });
+  }
 
- // if (!currentUser) {
- //   return res.status(404).json({ error: 'Usuário não encontrado.' });
- // }
-
- // if (!currentUser.publicacoes) {
- //   currentUser.publicacoes = [];
- // }
-
-  // Adiciona a nova publicação
- // currentUser.publicacoes.push({
-  //  conteudo: publicacao,
-   // data: new Date().toISOString()
    const newPublicacao = {
     conteudo: publicacao,
     data: new Date().toISOString(),  // Data atual em formato ISO
-    autor: user.id  // Pode ser o nome ou ID do autor
+    //autor: user.id  // Pode ser o nome ou ID do autor
+    autor: currentUser.id  // Pode ser o nome ou ID do autor
     //===========================================================================================================================================================================================
-};
-fs.writeFile(path.join(__dirname, 'users.json'), JSON.stringify(newPublicacao),(err) => {
+  };
+
+   // Adiciona a nova publicação ao usuário
+   if (!currentUser.publicacoes) {
+    currentUser.publicacoes = [];
+  }
+  currentUser.publicacoes.push(newPublicacao); // Adiciona à lista de publicações
+
+  fs.writeFile(path.join(__dirname, 'users.json'), JSON.stringify(newPublicacao),(err) => {
   if(err)throw err;
   console.log("Terminado a gravação!.....");
-});
+  res.status(200).json({ message: 'Publicação salva com sucesso!' });
+  });
 
-req.session.save((err) => {
+  req.session.save((err) => {
   if (err) {
     console.error('Erro ao salvar a sessão:', err);
     return res.status(500).send('Erro ao salvar a sessão');
   }
-});
   });
+ // res.status(200).json({ message: 'Publicação salva com sucesso!' });
+});
 
-//=================================================================
-// Função para carregar publicações dos amigos e atualizar o JSON
+  //=================================================================
+  // Função para carregar publicações dos amigos e atualizar o JSON
 function carregarPublicacoesDosAmigos(amigos) {
   let publicacoesAmigos = [];
 
