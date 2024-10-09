@@ -86,8 +86,8 @@ app.use(session({
   saveUninitialized:false,
   cookie: {
     maxAge: 60 * 60 * 1000,    // Sessão válida por 1 hora (ajuste conforme necessário)
-    secure: true,             // Se estiver usando HTTPS, defina como 'true'
-    httpOnly: true,            // Protege o cookie para que ele só seja acessível pelo servidor
+  //  secure: true,             // Se estiver usando HTTPS, defina como 'true'
+    httpOnly: true            // Protege o cookie para que ele só seja acessível pelo servidor
   }
 }));
 
