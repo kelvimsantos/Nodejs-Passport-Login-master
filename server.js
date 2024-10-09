@@ -86,7 +86,7 @@ app.use(session({
   saveUninitialized:false,
   cookie: {
     maxAge: 60 * 60 * 1000,    // Sessão válida por 1 hora (ajuste conforme necessário)
-    secure: false,             // Se estiver usando HTTPS, defina como 'true'
+    secure: true,             // Se estiver usando HTTPS, defina como 'true'
     httpOnly: true,            // Protege o cookie para que ele só seja acessível pelo servidor
   }
 }));
@@ -623,7 +623,7 @@ req.session.touch();
     return res.status(500).send('Erro ao salvar a sessão');
   }
   });
-  res.status(200).json({ message: 'Publicação salva com sucesso!' });
+  //res.status(200).json({ message: 'Publicação salva com sucesso!' });
 });
 
   //=================================================================
