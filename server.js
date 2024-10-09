@@ -592,11 +592,21 @@ app.post('/adicionar-publicacao', ensureAuthenticated, (req, res) => {
   }
   currentUser.publicacoes.push(newPublicacao); // Adiciona à lista de publicações
 
-  fs.writeFile(path.join(__dirname, 'users.json'), JSON.stringify(newPublicacao),(err) => {
-  if(err)throw err;
-  console.log("Terminado a gravação!.....");
+//  fs.writeFile(path.join(__dirname, 'users.json'), JSON.stringify(newPublicacao),(err) => {
+//  if(err)throw err;
+//  console.log("Terminado a gravação!.....");
+//  res.status(200).json({ message: 'Publicação salva com sucesso!' });
+//  });
+
+// Salva o arquivo JSON atualizado com todos os usuários
+try {
+  fs.writeFileSync(path.join(__dirname, 'users.json'), JSON.stringify(users, null, 2), 'utf-8');
+  console.log('Publicação salva com sucesso!');
   res.status(200).json({ message: 'Publicação salva com sucesso!' });
-  });
+} catch (error) {
+  console.error('Erro ao salvar o arquivo JSON:', error);
+  return res.status(500).json({ error: 'Erro ao salvar a publicação.' });
+}
 
   req.session.save((err) => {
   if (err) {
