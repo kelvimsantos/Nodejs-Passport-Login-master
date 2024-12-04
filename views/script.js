@@ -298,6 +298,7 @@ async function carregarPublicacoes() {
         console.error('Erro ao carregar publicações:', error);
     }
 }
+//
 //=============================================================================
 // Endpoint para salvar informações do usuário (por exemplo, nome, email, etc.)
 //app.post("/save-user-info", (req, res) => {

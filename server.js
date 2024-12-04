@@ -134,7 +134,7 @@ app.post("/upload", upload.single("profileImage"), (req, res) => {
   // Salve os dados de volta no arquivo JSON
   //fs.writeFileSync("./users.json", JSON.stringify(users, null, 2));
   // Responda com uma página HTML que contenha um script para atualizar dinamicamente a página do cliente
-
+  //
    // Salva a sessão manualmente antes de redirecionar
    req.session.save((err) => {
     if (err) {
