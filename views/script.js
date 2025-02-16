@@ -275,6 +275,7 @@ async function adicionarPublicacao(conteudo) {
             headers: {
                 'Content-Type': 'application/json'
             },
+           // body: JSON.stringify({ conteudo }), // Dados da publicação
             body: JSON.stringify({
                 usuarioId: 1,  // Substitua pelo ID do usuário atual
                 conteudo: conteudo
@@ -298,6 +299,7 @@ async function carregarPublicacoes() {
         console.error('Erro ao carregar publicações:', error);
     }
 }
+//
 //=============================================================================
 // Endpoint para salvar informações do usuário (por exemplo, nome, email, etc.)
 //app.post("/save-user-info", (req, res) => {

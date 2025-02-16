@@ -1,4 +1,5 @@
 //npm run devStart  PARA STARTAR O SERVIDOR
+const mongoose = require('mongoose');
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
@@ -32,6 +33,73 @@ const users = loadUsersFromFile(); // Carrega usuários do arquivo JSON
 // Middleware para fazer o parse do corpo das solicitações como JSON
 app.use(express.static('public')); // Para servir arquivos estáticos
 
+app.use(express.json()); // Para parsear JSON no corpo da requisição
+app.use(express.urlencoded({ extended: true })); // Para parsear dados de formulários
+
+mongoose.connect('mongodb+srv://codemaster:EmL7bmHukQAklr7H@cluster0.vqzke.mongodb.net/minha-rede-social?retryWrites=true&w=majority')
+  .then(() => console.log('Conectado ao MongoDB Atlas, **meu chifrudinho fofo**!'))
+  .catch(err => console.error('Erro na conexão, **meu broxa fedorento**:', err));
+
+//mongoose.connection.on('connected', () => {
+//  console.log('Conectado ao MongoDB Atlas, ** fofo**!');
+//});
+
+//mongoose.connection.on('error', (err) => {
+//  console.error('Erro na conexão, ** fedorento**:', err);
+//});
+
+
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  password: String,
+  amigos: [String],
+  publicacoes: [{
+    conteudo: String,
+    data: { type: Date, default: Date.now },
+  }],
+  profileImagePath: { type: String, default: './views/dir.jpg' }, // Caminho da imagem de perfil padrão
+  coverImagePath: { type: String, default: './views/default-cover-image.jpg' }, // Caminho da imagem de capa padrão
+  profileImagePathNoView: { type: String, default: 'dir.jpg' }, // Caminho da imagem de perfil sem o prefixo
+  declaracoes: { type: Array, default: [] }, // Declarações do usuário
+  comentarios: { type: Array, default: [] }, // Comentários do usuário
+  comunidades: { type: Array, default: [] }, // Comunidades do usuário
+  comunidadesDono: { type: Array, default: [] }, // Comunidades que o usuário é dono
+  publicacoesAmigos: { type: Array, default: [] }, // Publicações dos amigos
+});
+
+const User = mongoose.model('User', userSchema);
+
+app.post('/register', async (req, res) => {
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const newUser = new User({
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedPassword,
+      amigos: [],
+      publicacoes: [],
+      profileImagePath: './views/dir.jpg', // Caminho da imagem de perfil padrão
+      coverImagePath: './views/default-cover-image.jpg', // Caminho da imagem de capa padrão
+      profileImagePathNoView: 'dir.jpg', // Caminho da imagem de perfil sem o prefixo
+      declaracoes: [], // Declarações do usuário
+      comentarios: [], // Comentários do usuário
+      comunidades: [], // Comunidades do usuário
+      comunidadesDono: [], // Comunidades que o usuário é dono
+      publicacoesAmigos: [], // Publicações dos amigos
+    });
+
+    await newUser.save();
+    res.status(201).send('Usuário registrado com sucesso, **meu pirulito fofinho**!');
+  } catch (error) {
+    console.error('Erro ao registrar usuário, **meu bobinho sem jeito**:', error);
+    res.status(500).send('Erro ao registrar usuário.');
+  }
+});
+
+
+
+
 //app.use(bodyParser.json());
 // Configuração do body-parser para lidar com requisições POST
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -44,17 +112,35 @@ const USERS_PATH = path.join(__dirname, 'users.json');
 // Carregar todas as comunidades
 //const comunidades = JSON.parse(fs.readFileSync('comunidades.json', 'utf-8')).comunidades;
 
+//document.querySelector('#postButton').addEventListener('click', () => {
+//  const conteudo = document.querySelector('#postContent').value;
+//});
+
+
+
 
 initializePassport(
   passport,
-  email => {
-    const user = users.find(user => user.email === email);
+  async (email) => {
+    const user = await User.findOne({ email: email }); // Busca o usuário no MongoDB
     return user ? user : null;
   },
-  id => users.find(user => user.id === id),
-  loadUsersFromFile
- 
+  async (id) => {
+    const user = await User.findById(id); // Busca o usuário por ID no MongoDB
+    return user ? user : null;
+  }
 );
+
+//initializePassport(
+//  passport,
+//  email => {
+//    const user = users.find(user => user.email === email);
+//    return user ? user : null;
+//  },
+//  id => users.find(user => user.id === id),
+//  loadUsersFromFile
+ 
+//);
 
 
 
@@ -79,18 +165,33 @@ app.use(flash());
 //}
   //cookie: { secure: false } // Se estiver usando HTTP. Para HTTPS, defina como true
 //}));
+const FileStore = require('session-file-store')(session);
 
+//-----------------------------
+//app.use(session({
+//  store: new FileStore(),
+//  secret: process.env.SESSION_SECRET || 'fallbackSecret',
+//  resave:false,
+//  saveUninitialized:false,
+//  cookie: {
+ //   maxAge: 60 * 60 * 1000,    // Sessão válida por 1 hora (ajuste conforme necessário)
+ //   secure: false,             // Se estiver usando HTTPS, defina como 'true'
+    //httpOnly: false            // Protege o cookie para que ele só seja acessível pelo servidor
+//  }
+//}));
 app.use(session({
+  store: new FileStore({
+    path: path.join(__dirname, 'sessions'), // Caminho para o diretório de sessões
+  }),
   secret: process.env.SESSION_SECRET || 'fallbackSecret',
-  resave:false,
-  saveUninitialized:false,
+  resave: false,
+  saveUninitialized: false,
   cookie: {
-    maxAge: 60 * 60 * 1000,    // Sessão válida por 1 hora (ajuste conforme necessário)
-  //  secure: true,             // Se estiver usando HTTPS, defina como 'true'
-    httpOnly: true            // Protege o cookie para que ele só seja acessível pelo servidor
-  }
+    maxAge: 60 * 60 * 1000, // 1 hora
+    secure: false,
+    httpOnly: true,
+  },
 }));
-
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -134,7 +235,7 @@ app.post("/upload", upload.single("profileImage"), (req, res) => {
   // Salve os dados de volta no arquivo JSON
   //fs.writeFileSync("./users.json", JSON.stringify(users, null, 2));
   // Responda com uma página HTML que contenha um script para atualizar dinamicamente a página do cliente
-
+  //
    // Salva a sessão manualmente antes de redirecionar
    req.session.save((err) => {
     if (err) {
@@ -186,12 +287,36 @@ app.post("/upload-cover", upload.single("coverImage"), (req, res) => {
   `);
 });
 
+//-----------
+//function ensureAuthenticated(req, res, next) {
+//  if (req.isAuthenticated()) {
+//    return next();
+//  }
+//  res.redirect('/login');
+//}
 
-function ensureAuthenticated(req, res, next) {
+async function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/login');
+
+  try {
+    const response = await fetch('http://localhost:3000/check-auth', {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (response.ok) {
+      return next();
+    } else {
+      console.log('Sessão expirada. Tentando relogar...');
+      await relogar();
+      return next();
+    }
+  } catch (err) {
+    console.error('Erro ao verificar autenticação:', err);
+    res.status(500).send('Erro ao verificar autenticação.');
+  }
 }
 
 // Suponha que você tenha um endpoint para obter os dados do usuário
@@ -331,60 +456,149 @@ app.get('/login', checkNotAuthenticated, (req, res) => {
   res.render('login.ejs');
 });
 
-app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/login',
-  failureFlash: true
-}));
+//app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
+//  successRedirect: '/',
+//  failureRedirect: '/login',
+//  failureFlash: true
+//}));
+
+app.post('/login', checkNotAuthenticated, (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).json({ message: info.message });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      return res.status(200).json({ message: 'Login bem-sucedido', user });
+    });
+  })(req, res, next);
+});
 
 app.get('/register', checkNotAuthenticated, (req, res) => {
   res.render('register.ejs');
 });
 
 
-
-app.post('/register', checkNotAuthenticated, async (req, res) => {
+//app.post('/login', checkNotAuthenticated, (req, res, next) => {
+//  passport.authenticate('local', (err, user, info) => {
+//    if (err) {
+//      return res.status(500).json({ message: 'Erro no servidor.' });
+//    }
+//    if (!user) {
+//      return res.status(401).json({ message: info.message }); // Mensagem de falha (e.g., senha incorreta)
+//    }
+//    req.login(user, (err) => {
+//      if (err) {
+//        return res.status(500).json({ message: 'Erro ao criar sessão.' });
+//      }
+//      res.status(200).json({ message: 'Login bem-sucedido', user: { id: user.id, email: user.email } });
+//    });
+//  })(req, res, next);
+//});
+async function ensureAuthenticated(actionCallback) {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const newUser = {
-      id: Date.now().toString(),
-      name: req.body.name,
-      email: req.body.email,
-      password: hashedPassword,
-      profileImagePath:  `./views/dir.jpg`,
-      coverImagePath: `./views/default-cover-image.jpg`,
-      profileImagePathNoView :`dir.jpg`,
-      declaracoes: [], // Inicialize o campo declaracoes como um array vazio
-      comentarios: [],
-      amigos: [], // Inicializa a lista de amigos vazia
-      publicacoes: [], // Inicialmente, sem publicações
-      publicacoesAmigos:[],
-      comunidades:[],
-      comunidadesDono:[]
-    };
+    const response = await fetch('/check-auth', {
+      method: 'GET',
+      credentials: 'include'
+    });
 
-    // Carrega usuários existentes do arquivo
-    const existingUsers = loadUsersFromFile();
-    
-    // Verifica se o e-mail já está registrado
-    if (existingUsers.some(user => user.email === newUser.email)) {
-      return res.redirect('/register');
+    if (response.ok) {
+      // Usuário autenticado, execute a ação
+      actionCallback();
+    } else {
+      console.log('Sessão expirada. Tentando relogar...');
+      await relogar();
+      actionCallback();
     }
+  } catch (err) {
+    console.error('Erro ao verificar autenticação:', err);
+  }
+}
+async function relogar() {
+  const email = localStorage.getItem('email');
+  const password = localStorage.getItem('password');
 
-    existingUsers.push(newUser);
-    // Salva o usuário no arquivo JSON
-    saveUsersToFile(existingUsers);
+  if (email && password) {
+    try {
+      const response = await fetch('/login', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
 
-    // Após criar o novo usuário, recarregue os dados dos usuários
-    reloadUsersData();
-    console.log('Dados dos usuários recarregados:', loadUsersFromFile()); // Verifique se os dados dos usuários foram recarregados corretamente
+      if (response.ok) {
+        console.log('Relogin bem-sucedido!');
+      } else {
+        console.error('Erro ao relogar:', await response.text());
+        alert('Sua sessão expirou. Por favor, faça login novamente.');
+        window.location.href = '/login';
+      }
+    } catch (err) {
+      console.error('Erro de rede ao relogar:', err);
+      alert('Não foi possível relogar. Tente novamente.');
+    }
+  } else {
+    alert('Credenciais ausentes. Por favor, faça login novamente.');
+    window.location.href = '/login';
+  }
+}
 
-    // Redirecione para a página de login
-     res.redirect('/login');
-  } catch {
-    res.redirect('/register');
+app.get('/check-auth', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.status(200).json({ message: 'Usuário autenticado' });
+  } else {
+    res.status(401).json({ message: 'Sessão expirada' });
   }
 });
+
+//app.post('/register', checkNotAuthenticated, async (req, res) => {
+//  try {
+//    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+//    const newUser = {
+//      id: Date.now().toString(),
+//      name: req.body.name,
+//      email: req.body.email,
+//      password: hashedPassword,
+//      profileImagePath:  `./views/dir.jpg`,
+//      coverImagePath: `./views/default-cover-image.jpg`,
+//      profileImagePathNoView :`dir.jpg`,
+//      declaracoes: [], // Inicialize o campo declaracoes como um array vazio
+//      comentarios: [],
+//      amigos: [], // Inicializa a lista de amigos vazia
+//      publicacoes: [], // Inicialmente, sem publicações
+//      publicacoesAmigos:[],
+//      comunidades:[],
+//      comunidadesDono:[]
+//    };
+//
+//    // Carrega usuários existentes do arquivo
+//    const existingUsers = loadUsersFromFile();
+//    
+//    // Verifica se o e-mail já está registrado
+//    if (existingUsers.some(user => user.email === newUser.email)) {
+//      return res.redirect('/register');
+//    }
+//
+//    existingUsers.push(newUser);
+//    // Salva o usuário no arquivo JSON
+//    saveUsersToFile(existingUsers);
+//
+//    // Após criar o novo usuário, recarregue os dados dos usuários
+//    reloadUsersData();
+//    console.log('Dados dos usuários recarregados:', loadUsersFromFile()); // Verifique se os dados dos usuários foram recarregados corretamente
+//
+//    // Redirecione para a página de login
+//     res.redirect('/login');
+//  } catch {
+//    res.redirect('/register');
+//  }
+//});
 
 
 app.delete('/logout', (req, res) => {
@@ -452,6 +666,8 @@ function  loadUsersFromFile() {
   }
 }
 
+
+
 // Rota para salvar a declaração ---------------------------------------------------------------------------
 app.post('/salvar-declaracao', ensureAuthenticated, (req, res) => {
   // Extrai a declaração do corpo da solicitação
@@ -467,6 +683,10 @@ app.post('/salvar-declaracao', ensureAuthenticated, (req, res) => {
 
   // Carrega os dados atuais do arquivo JSON
   let users = [];
+  if (response.status === 401) {
+    const email = localStorage.getItem('email');
+    const password = localStorage.getItem('password');
+  }
   try {
     users = loadUsersFromFile();
   } catch (error) {
@@ -556,6 +776,7 @@ req.session.touch();
   function gerarIdUnico() {
   return '_' + Math.random().toString(36).substr(2, 9);
   }
+  
   //xxxx
   // Rota para salvar a publicação do usuário
   app.post('/salvar-publicacao', ensureAuthenticated, (req, res) => {
