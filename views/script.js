@@ -337,55 +337,6 @@ document.getElementById('btnEncontrarComunidades').addEventListener('click', fun
         })
         .catch(error => console.error('Erro ao carregar comunidades:', error));
 });
-//adicionar amigo ----------------------------------
-//botao 
-// Botão de envio
-//document.getElementById('search-form').addEventListener('submit', function(event) {
-//    event.preventDefault();
-//    const email = document.getElementById('search-input').value;
-//    
-//    fetch('/buscar-usuario', {
-//      method: 'POST',
-//      headers: {
-//        'Content-Type': 'application/json'
-//      },
-//      body: JSON.stringify({ email: email })
-//    })
-//    .then(response => response.json())
-//    .then(data => {
-//      if (data.error) {
-//        document.getElementById('search-results').innerHTML = '<p>' + data.error + '</p>';
-//      } else {
-//        window.location.href = '/perfil/' + data.id;
-//      }
-//    })
-//    .catch(error => console.error('Erro ao buscar usuário:', error));
-//  });
-
-//document.getElementById('search-form').addEventListener('submit', function(event) {
-//    event.preventDefault();
-//    const email = document.getElementById('search-input').value;
-//    
-//    fetch('/buscar-usuario', {
-//      method: 'POST',
-//      headers: {
-//        'Content-Type': 'application/json',
-//      },
-//      body: JSON.stringify({ email: email }),
-//    })
-//      .then(response => response.json())
-//      .then(data => {
-//        if (data.error) {
-//          document.getElementById('search-results').innerHTML = '<p>' + data.error + '</p>';
-//        } else {
-//          window.location.href = '/perfil/' + data._id; // Usar data._id (ObjectId do MongoDB)
-//        }
-//      })
-//      .catch(error => console.error('Erro ao buscar usuário:', error));
-//  });
-
-
-
 
 document.getElementById('search-form').addEventListener('submit', function(event) {
     event.preventDefault();
@@ -412,46 +363,7 @@ document.getElementById('search-form').addEventListener('submit', function(event
       })
       .catch(error => console.error('Erro ao buscar usuário:', error));
   });
-//document.getElementById('search-form').addEventListener('submit', function(event) {
-//    event.preventDefault();
-//    const email = document.getElementById('search-input').value;
-//    console.log('Enviando requisição para buscar usuário:', email);
-//    
-//    fetch('/buscar-usuario', {
-//      method: 'POST',
-//      headers: {
-//        'Content-Type': 'application/json',
-//      },
-//      body: JSON.stringify({ email: email }),
-//    })
-//      .then(response => response.json())
-//      .then(data => {
-//        const searchResults = document.getElementById('search-results');
-//        searchResults.innerHTML = ''; // Limpa os resultados anteriores
-//  
-//        if (data.error) {
-//          searchResults.innerHTML = '<p>' + data.error + '</p>';
-//        } else {
-//          // Cria um card para o usuário encontrado
-//          const userCard = document.createElement('div');
-//          userCard.classList.add('user-card');
-//          userCard.innerHTML = `
-//            <img src="${data.profileImagePath.replace(/^\.\/views\//, '')}" alt="Foto de perfil">
-//            <div>
-//              <h3>${data.name}</h3>
-//              <p>${data.email}</p>
-//              <a href="/perfil/${data._id}">Ver perfil</a>
-//            </div>
-//          `;
-//          searchResults.appendChild(userCard);
-//        }
-//      })
-//      .catch(error => console.error('Erro ao buscar usuário:', error));
-//  });
-  
 
-
-  
   function enviarSolicitacaoAmizade(friendId) {
     fetch('/adicionar-amigo', {
       method: 'POST',
