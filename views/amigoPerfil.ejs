@@ -11,30 +11,37 @@
   <!-- Seção de Capa e Foto de Perfil -->
   <div class="perfil-header">
     <div class="capa">
-      <img src="<%= amigoCapaImagePath %>" alt="Imagem de Capa">
+      <% if (amigoCapaImagePath) { %>
+        <img src="<%= amigoCapaImagePath %>" alt="Imagem de Capa">
+      <% } else { %>
+        <div class="capa-placeholder">Sem imagem de capa</div>
+      <% } %>
     </div>
     <div class="perfil-info">
-      <img class="profile-img" src="<%= amigoProfileImagePath  %>" alt="Foto de Perfil">
-      
+      <% if (amigoProfileImagePath) { %>
+        <img class="profile-img" src="<%= amigoProfileImagePath %>" alt="Foto de Perfil">
+      <% } else { %>
+        <div class="profile-placeholder">Sem foto de perfil</div>
+      <% } %>
       <h1><%= amigoName %></h1>
-      <button id="amigoButton" data-friend-id="<%= amigo.id %>">
-        <%= (user.amigos && Array.isArray(user.amigos) && user.amigos.includes(amigo.id)) ? 'Remover Amigo' : 'Adicionar Amigo' %>
+      <button id="amigoButton" data-friend-id="<%= amigo._id %>">
+        <%= (user && user.amigos && Array.isArray(user.amigos) && user.amigos.includes(amigo._id.toString())) ? 'Remover Amigo' : 'Adicionar Amigo' %>
       </button>
-      
     </div>
-    
   </div>
 
   <!-- Seção de Declarações -->
   <div id="declarations-section">
     <h1>DIARIO DE DECLARAÇÕES</h1>
     <h2>Declarações</h2>
-  
-    <!-- Lista de declarações -->
     <ul id="declaration-list">
-      <% amigoDeclaracoes.forEach(function(declaracao) { %>
-        <li><%= declaracao %></li>
-      <% }) %>
+      <% if (amigoDeclaracoes && Array.isArray(amigoDeclaracoes)) { %>
+        <% amigoDeclaracoes.forEach(function(declaracao) { %>
+          <li><%= declaracao %></li>
+        <% }) %>
+      <% } else { %>
+        <li>Nenhuma declaração encontrada.</li>
+      <% } %>
     </ul>
   </div>
 
@@ -42,7 +49,7 @@
   <h3>Comunidades</h3>
   <div class="community-container">
     <ul class="community-grid">
-      <% if (comunidadesComImagens.length > 0) { %>
+      <% if (comunidadesComImagens && Array.isArray(comunidadesComImagens) && comunidadesComImagens.length > 0) { %>
         <% comunidadesComImagens.forEach(comunidade => { %>
           <li class="community">
             <a href="/comunidade/<%= comunidade.id %>">
@@ -56,9 +63,7 @@
       <% } %>
     </ul>
   </div>
-
 </div>
-
 <script>
   document.getElementById('amigoButton').addEventListener('click', function() {
     const friendId = this.getAttribute('data-friend-id');
@@ -76,13 +81,14 @@
       if (data.success) {
         // Alterna o texto do botão conforme a ação
         this.innerText = action === 'adicionar' ? 'Remover Amigo' : 'Adicionar Amigo';
+        alert(action === 'adicionar' ? 'Amigo adicionado com sucesso!' : 'Amigo removido com sucesso!');
       } else {
         console.error('Erro:', data.error);
+        alert('Erro ao atualizar amizade: ' + data.error);
       }
     })
     .catch(error => console.error('Erro ao atualizar amizade:', error));
   });
 </script>
-
 </body>
 </html>

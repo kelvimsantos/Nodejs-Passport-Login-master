@@ -51,83 +51,72 @@
             <div class="post">
                 <p>Conteúdo da Publicação...</p>
                 
-                <form id="declaration-form" action="/adicionar-publicacao" method="post">
-                    <!-- <label for="declaration">Publicar Declaração:</label>-->
-                    <textarea class="declaration" id="declaration" name="conteudo"></textarea>
-                    <br/>
-                    <button type="submit">Publicar</button>
+              <!-- Formulário para publicar no feed -->
+                <form id="declaration-form" action="javascript:void(0);">
+                  <textarea class="declaration" id="declaration" name="conteudo" placeholder="Escreva uma publicação..." required></textarea>
+                  <br/>
+                  <button type="submit">Publicar</button>
                 </form>
 
                 <div id="feed-container"></div>
 
                 <div class="publicaçoe-feed">
-                    <h2>Publicações</h2>
-                    <ul>
-                      <% publicacoes.forEach(publicacao => { %>
-                        <li>
-                          <strong><%= publicacao.autor %></strong>: <%= publicacao.conteudo %>
-                          <br><small><%= publicacao.data %></small>
-                        </li>
-                      <% }) %>
+                  <h2>Publicações</h2>
+                  <ul id="lista-publicacoes">
+                    <!-- As publicações serão carregadas aqui -->
+                  </ul>
                     </ul>
 
                 </div>
                 <!-- Botões de Curtir, Comentar, Compartilhar, etc. -->
-
             </div>
+            <!-- Botão para carregar mais publicações -->
+            <button id="carregarMais" style="display: none;">Carregar mais publicações</button>
+
             <!-- Adicione mais publicações conforme necessário -->
         </div>
         <!-- Amigos e Comunidades -->
         <div class="sidebar">
             <div class="friends-communities">
+                <!-- Amigos -->
                 <h3>Amigos</h3>
-
-            <div class="friend-bloco">
-                <div class="friend-container">
+                <div class="friend-bloco">
+                  <div class="friend-container">
                     <% amigos.forEach(amigo => { %>
-                        <% if (amigo) { %>
-                          <div class="friend" data-id="<%= amigo.id %>" data-name="<%= amigo.name %>" data-email="<%= amigo.email %>" data-image="<%= amigo.profileImagePathNoView %>">
-                            <a href="/perfil/<%= amigo.id %>">
-                              <img src="<%= amigo.profileImagePathNoView %>" alt="Foto de perfil" width="30" height="30">
-                              <p><strong><%= amigo.name %></strong></p>
-                              <!--<p><strong><%= amigo.name %></strong> - <%= amigo.email %></p>-->
-                            </a>
-                          </div>
-                        <% } else { %>
-                          <div class="friend">
-                            <p>Amigo não encontrado</p>
-                          </div>
-                        <% } %>
-                      <% }) %>
+                      <div class="friend" data-id="<%= amigo._id %>" data-name="<%= amigo.name %>" data-image="<%= amigo.profileImagePath %>">
+                        <a href="/perfil/<%= amigo._id %>">
+                          <img src="<%= amigo.profileImagePath %>" alt="Foto de perfil" width="30" height="30">
+                          <p><strong><%= amigo.name %></strong></p>
+                        </a>
+                      </div>
+                    <% }) %>
+                  </div>
+                  <a href="/todos-amigos">Ver todos os amigos</a>
                 </div>
-                <a href="/todos-amigos">Ver todos os amigos</a>
-            </div>
                     <!-- Adicione mais amigos conforme necessário -->
 
             <div class="views/stylesFeed.css">
                <!-- Comunidades -->
                 <h3>Comunidades</h3>
                 <div class="community-container">
-                    <h2>Comunidades</h2>
-                    
-                    <ul class="community-grid">
-                      <% for (let i = 0; i < 9; i++) { %>
-                        <li class="community">
-                          <% if (comunidades[i]) { %>
-                            <a href="/comunidade/<%= comunidades[i].id %>">
-                              <img src="<%= comunidades[i].imagemPerfil.replace(/^\.\/views\//, '') %>" alt="<%= comunidades[i].nome %>">
-                              <p><%= comunidades[i].nome %></p>
-                            </a>
-                          <% } else { %>
-                            <img src="./QWsX.gif" alt="Comunidade Vazia">
-                            <p>Comunidade Vazia</p>
-                          <% } %>
-                        </li>
-                      <% } %>
-                    </ul>
+                  <ul class="community-grid">
+                    <% for (let i = 0; i < 9; i++) { %>
+                      <li class="community">
+                        <% if (comunidades[i]) { %>
+                          <a href="/comunidade/<%= comunidades[i]._id %>">
+                            <img src="<%= comunidades[i].imagemPerfilNoView || '/default-community.jpg' %>" alt="<%= comunidades[i].nome %>">
+                            <p><%= comunidades[i].nome %></p>
+                          </a>
+                        <% } else { %>
+                          <img src="/default-community.jpg" alt="Comunidade Vazia">
+                          <p>Comunidade Vazia</p>
+                        <% } %>
+                      </li>
+                    <% } %>
+                  </ul>
                 
-                    <!-- Link para criar nova comunidade -->
-                    <a href="/criar-comunidade">Criar Nova Comunidade</a>
+                  <!-- Link para criar nova comunidade -->
+                  <a href="/criar-comunidade">Criar Nova Comunidade</a>
                 </div>
             </div>
             <div class="right-div"> <img class="right-image"  src="eminemGOD.gif" alt="Foto de dono"></div>
@@ -154,6 +143,81 @@
     // Redireciona para a página de busca de comunidades
     window.location.href = '/encontrar-comunidades';
     });
+
+    // Envia a publicação para o servidor
+    document.getElementById('declaration-form').addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const conteudo = document.getElementById('declaration').value;
+
+    if (!conteudo.trim()) {
+      alert('Digite um conteúdo válido.');
+      return;
+    }
+
+    fetch('/publicar-feed', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ conteudo: conteudo })
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message);
+      carregarPublicacoes(); // Recarrega as publicações após publicar
+    })
+    .catch(error => console.error('Erro ao publicar:', error));
+    
+  });
+
+  let paginaAtual = 1;
+
+  // Função para carregar as publicações
+   // Função para carregar as publicações
+   async function carregarPublicacoes() {
+    try {
+      const response = await fetch(`/carregar-publicacoes?pagina=${paginaAtual}`);
+      const data = await response.json();
+
+      const listaPublicacoes = document.getElementById('lista-publicacoes');
+
+      if (paginaAtual === 1) {
+        listaPublicacoes.innerHTML = ''; // Limpa a lista ao carregar a primeira página
+      }
+
+      // Adiciona as publicações à lista
+      data.publicacoes.forEach(pub => {
+        const item = document.createElement('li');
+        item.innerHTML = `
+          <div class="publicacao-autor">
+            <img src="${pub.autorImagem}" alt="Foto de perfil" class="autor-foto">
+            <div class="autor-info">
+              <strong>${pub.autorNome}</strong>
+              <p class="publicacao-data">${pub.dataFormatada}</p>
+            </div>
+          </div>
+          <div class="publicacao-conteudo">
+            <p>${pub.conteudo}</p>
+          </div>
+        `;
+        listaPublicacoes.appendChild(item);
+      });
+
+      // Mostra ou esconde o botão "Carregar mais"
+      document.getElementById('carregarMais').style.display = data.temMais ? 'block' : 'none';
+    } catch (error) {
+      console.error('Erro ao carregar publicações:', error);
+    }
+  }
+
+  // Carrega as publicações ao carregar a página
+  carregarPublicacoes();
+
+ // Carrega mais publicações ao clicar no botão
+ document.getElementById('carregarMais').addEventListener('click', () => {
+    paginaAtual += 1;
+    carregarPublicacoes();
+  });
   </script>
     </div>
 </body>

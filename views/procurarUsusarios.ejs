@@ -14,41 +14,43 @@
     </form>
   
     <!-- Local onde os usuários serão exibidos -->
+    <div id="search-results" class="user-list">
     <div id="resultadoUsuarios"></div>
   </div> </html>
 
   <script>
-    document.getElementById('buscarUsuarios').addEventListener('submit', function() {
-      const nomeUsuario = document.getElementById('nomeUsuario').value;
 
-      // Faz a requisição para o backend buscando os usuários
-      fetch(`/FindUsers?nome=${encodeURIComponent(nomeUsuario)}`)
-        .then(response => response.json())
-        .then(data => {
-          // Limpa resultados anteriores
-          const resultadoDiv = document.getElementById('resultadoUsuarios');
-          resultadoDiv.innerHTML = '';
+document.getElementById('buscarUsuarios').addEventListener('submit', function() {
+  const nomeUsuario = document.getElementById('nomeUsuario').value;
 
-          if (data.length === 0) {
-            resultadoDiv.innerHTML = '<p>Nenhum usuário encontrado.</p>';
-          } else {
-            // Exibir os usuários
-            data.forEach(user => {
-              const div = document.createElement('div');
-              div.classList.add('userCard'); // Adicionar classe para estilização
-              div.innerHTML = `
-                <div>
-                  <h3>${user.name}</h3>
-                  <a href="/perfil/${user.id}">
-                    <img src="${user.profileImagePathNoView}" alt="Imagem do usuário" width="100">
-                    <p>Email: ${user.email}</p>
-                  </a>
-                </div>
-              `;
-              resultadoDiv.appendChild(div);
-            });
-          }
-        })
-        .catch(error => console.error('Erro ao buscar usuários:', error));
-    });
+  // Faz a requisição para o backend buscando os usuários
+  fetch(`/FindUsers?nome=${encodeURIComponent(nomeUsuario)}`)
+    .then(response => response.json())
+    .then(data => {
+      // Limpa resultados anteriores
+      const resultadoDiv = document.getElementById('resultadoUsuarios');
+      resultadoDiv.innerHTML = '';
+
+      if (data.length === 0) {
+        resultadoDiv.innerHTML = '<p>Nenhum usuário encontrado.</p>';
+      } else {
+        // Exibir os usuários
+        data.forEach(user => {
+          const div = document.createElement('div');
+          div.classList.add('userCard'); // Adicionar classe para estilização
+          div.innerHTML = `
+            <div>
+              <h3>${user.name}</h3>
+              <a href="/perfil/${user._id}"> <!-- Usar user._id aqui -->
+                <img src="${user.profileImagePathNoView}" alt="Imagem do usuário" width="100">
+                <p>Email: ${user.email}</p>
+              </a>
+            </div>
+          `;
+          resultadoDiv.appendChild(div);
+        });
+      }
+    })
+    .catch(error => console.error('Erro ao buscar usuários:', error));
+});
   </script>
