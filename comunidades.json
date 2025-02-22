@@ -69,7 +69,8 @@
       "donoId": "1727310764911",
       "nome": "123123",
       "membros": [
-        "1727310764911"
+        "1727310764911",
+        "67b3c3ccfa2f601d5b0acb52"
       ],
       "quantidadeMembros": 1,
       "imagemPerfil": "./views/data/comunidades/undefined",
@@ -306,6 +307,18 @@
       "quantidadeMembros": 1,
       "imagemPerfil": "./views/data/comunidades/XNbIjSb.gif1728272025099.gif",
       "imagemPerfilNoView": "/data/comunidades/XNbIjSb.gif1728272025099.gif",
+      "feed": []
+    },
+    {
+      "id": "comunidade26",
+      "donoId": "1733277591561",
+      "nome": "teste 2",
+      "membros": [
+        "1733277591561"
+      ],
+      "quantidadeMembros": 1,
+      "imagemPerfil": "./views/data/comunidades/29960888.GIF1733278362040.GIF",
+      "imagemPerfilNoView": "/data/comunidades/29960888.GIF1733278362040.GIF",
       "feed": []
     }
   ]

@@ -338,3 +338,17 @@
 .btn-procurar-usuarios:hover {
     background-color: #0056b3; /* Cor do botão ao passar o mouse */
 }
+
+/* Estilo para a foto do autor */
+.autor-foto {
+    width: 40px; /* Tamanho pequeno */
+    height: 40px; /* Tamanho pequeno */
+    border-radius: 50%; /* Torna a imagem circular */
+    border-radius: 50%;
+    object-fit: cover; /* Garante que a imagem cubra o espaço sem distorção */
+    margin-right: 10px; /* Espaçamento entre a foto e as informações do autor */
+  }
+
+  .publicacao-autor{
+    background-color: #639ede;
+  }

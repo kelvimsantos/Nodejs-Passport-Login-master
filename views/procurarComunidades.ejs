@@ -1,53 +1,71 @@
 <!DOCTYPE html>
-<div lang="pt">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
   <title>Procurar Comunidades</title>
   <link rel="stylesheet" href="./procurar-comunidade.css">
 </head>
-<div id="comunity" class="comunity">
-<form id="buscarComunidades" action="javascript:void(0);">
-    <input type="text" id="nomeComunidade" placeholder="Digite o nome da comunidade">
-    <button type="submit">Buscar</button>
-  </form>
+<body>
+  <div id="comunity" class="comunity">
+    <form id="buscarComunidades" action="javascript:void(0);">
+      <input type="text" id="nomeComunidade" placeholder="Digite o nome da comunidade">
+      <button type="submit">Buscar</button>
+    </form>
   
-  <!-- Local onde as comunidades serão exibidas -->
-  <div id="resultadoComunidades"></div>
-</div>
-</html>
+    <!-- Local onde as comunidades serão exibidas -->
+    <div id="resultadoComunidades"></div>
+  </div>
+
   <script>
-        document.getElementById('buscarComunidades').addEventListener('submit', function() {
-      const nomeComunidade = document.getElementById('nomeComunidade').value;
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('buscarComunidades');
 
-      // Faz a requisição para o backend buscando as comunidades
-      fetch(`/FindComunidades?nome=${encodeURIComponent(nomeComunidade)}`)
-        .then(response => response.json())
-        .then(data => {
-          // Limpa resultados anteriores
-          const resultadoDiv = document.getElementById('resultadoComunidades');
-          resultadoDiv.innerHTML = '';
+      if (!form) {
+        console.warn('⚠️ Formulário de busca de comunidades não encontrado.');
+        return;
+      }
 
-          if (data.length === 0) {
-            resultadoDiv.innerHTML = '<p>Nenhuma comunidade encontrada.</p>';
-          } else {
-            // Exibir as comunidades
-            data.forEach(comunidade => {
-                const div = document.createElement('div');
-                div.innerHTML = `
-                    <div class="comunidade-item">
-                        <a href="/comunidade/${comunidade.id}">
-                            <img src="${comunidade.imagemPerfil}" alt="Imagem da comunidade" class="comunidade-img">
-                            <div class="comunidade-info">
-                                <h3>${comunidade.nome}</h3>
-                                <p>Membros: ${comunidade.membros.length}</p>
-                            </div>
-                        </a>
-                    </div>
-                `;
-                resultadoDiv.appendChild(div);
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        const nomeComunidade = document.getElementById('nomeComunidade').value.trim();
+
+        console.log('🔍 Iniciando busca de comunidades com nome:', nomeComunidade);
+
+        fetch(`/FindComunidades?nome=${encodeURIComponent(nomeComunidade)}`)
+          .then(response => {
+            if (!response.ok) throw new Error('Erro na requisição.');
+            return response.json();
+          })
+          .then(comunidades => {
+            const resultadoDiv = document.getElementById('resultadoComunidades');
+            resultadoDiv.innerHTML = '';
+
+            if (!comunidades || comunidades.length === 0) {
+              console.warn('⚠️ Nenhuma comunidade encontrada.');
+              resultadoDiv.innerHTML = '<p>Nenhuma comunidade encontrada.</p>';
+              return;
+            }
+
+            console.log(`✅ ${comunidades.length} comunidades carregadas.`);
+
+            comunidades.forEach(comunidade => {
+              const div = document.createElement('div');
+              div.classList.add('comunidade-item');
+              div.innerHTML = `
+                <a href="/comunidade/${comunidade._id}">
+                  <img src="${comunidade.imagemPerfil}" alt="Imagem da comunidade" class="comunidade-img" />
+                  <div class="comunidade-info">
+                    <h3>${comunidade.nome}</h3>
+                    <p>Membros: ${comunidade.quantidadeMembros}</p>
+                  </div>
+                </a>
+              `;
+              resultadoDiv.appendChild(div);
             });
-          }
-        })
-        .catch(error => console.error('Erro ao buscar comunidades:', error));
+          })
+          .catch(error => console.error('❌ Erro ao buscar comunidades:', error));
+      });
     });
-</script>
+  </script>
+</body>
+</html>

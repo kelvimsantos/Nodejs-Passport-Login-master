@@ -18,68 +18,23 @@ document.addEventListener('DOMContentLoaded', function () {
     //feed
     const nomeUsuarioSpan = document.getElementById('nomeUsuario'); // Adicionado para exibir o nome do usuário
    const imagemUsuarioFeed = document.getElementById('preview-image'); // Adicionado para exibir a imagem do usuário
-   
-    // Faça uma requisição AJAX para obter os dados do usuário
-    fetch('/dados-usuario')
-    .then(response => response.json())
-    .then(dadosUsuario => {
-        // Faça algo com os dados do usuário
-        console.log(dadosUsuario.nome);
-        console.log(dadosUsuario.email);
-    
-        // Outras lógicas do script aqui
-    
-        // Pega o elemento span pelo id
-        var nomeUsuarioSpan = document.getElementById('nomeUsuario');
-        // Define o valor do nome do usuário no span
-        nomeUsuarioSpan.textContent = dadosUsuario.nome;
-    
-        // Pega o elemento img pelo id
-        var imagemUsuario = document.getElementById('preview-image');
-        // Define o caminho da imagem do perfil
-        // Define o caminho da imagem do perfil apenas se existir
-        if (dadosUsuario.profileImagePath) {
-            imagemUsuario.src = dadosUsuario.profileImagePath.replace(/^\.\/views\//, ''); 
-            console.log('Caminho da imagem do perfil:', dadosUsuario.profileImagePath);
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            imagemUsuarioFeed.src = dadosUsuario.profileImagePath.replace(/^\.\/views\//, '');
-            }
-        // Pega o elemento img da capa pelo id
-        var imagemCapa = document.getElementById('preview-cover-image');
-        // Define o caminho da imagem da capa, se existir
-        if (dadosUsuario.coverImagePath) {
-            imagemCapa.src = dadosUsuario.coverImagePath.replace(/^\.\/views\//, '');
-        }
-    
-        // Acesse as declarações do usuário
-        const declaracoesUsuario = dadosUsuario.declaracoes;
-    
-        // Se houver declarações, exiba-as na página
-        if (declaracoesUsuario && declaracoesUsuario.length > 0) {
-            const declarationList = document.getElementById('declaration-list');
-    
-            // Limpa a lista de declarações para evitar duplicatas
-            declarationList.innerHTML = '';
-    
-            // Itera sobre cada declaração e cria um item de lista para ela
-            declaracoesUsuario.forEach(declaracao => {
-                const listItem = document.createElement('li');
-                listItem.textContent = declaracao;
-                declarationList.appendChild(listItem);
-            });
-        } else {
-            console.log('O usuário não possui declarações.');
-        }
-    })
-    .catch(error => console.error('Erro ao obter dados do usuário:', error));
-      
-   // Referências aos elementos do DOM
-   document.getElementById('search-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Impede o comportamento padrão de submissão do formulário
-    console.log('Botão de busca clicado!');
-    const friendId = document.getElementById('search-input').value; // Obtém o ID do amigo
-    enviarSolicitacaoAmizade(friendId);
-});
+ 
+   fetch('/dados-usuario')
+   .then(response => response.json())
+   .then(dadosUsuario => {
+       const imagemUsuario = document.getElementById('preview-image');
+       const imagemCapa = document.getElementById('preview-cover-image');
+
+       if (dadosUsuario.profileImagePath) {
+           imagemUsuario.src = dadosUsuario.profileImagePath;
+       }
+
+       if (dadosUsuario.coverImagePath) {
+           imagemCapa.src = dadosUsuario.coverImagePath;
+       }
+   })
+   .catch(error => console.error('Erro ao obter dados do usuário:', error));
+
     
     carregarInformacoesDoUsuario();
 
@@ -154,59 +109,59 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Adicione mais lógica conforme necessário
-
-
-
 });
-
-
-
 //salvar imagem sem redirecionar pagina
-document.getElementById('update-profile-image').addEventListener('click', function() {
+document.getElementById('update-profile-image').addEventListener('click', function (e) {
+    e.preventDefault();
     const input = document.getElementById('profile-image');
     const file = input.files[0];
+  
+    if (!file) {
+      alert('Selecione uma imagem para enviar.');
+      return;
+    }
+  
     const formData = new FormData();
     formData.append('profileImage', file);
-
+  
     fetch('/upload', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest' // Adicione o cabeçalho X-Requested-With para identificar a requisição AJAX
-        }
+      method: 'POST',
+      body: formData
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data.message); // Exiba a mensagem de sucesso no console
-
-        // Atualize a imagem na página, se necessário
-        window.location.reload();
-        // Exemplo: document.getElementById('preview-image').src = novoCaminhoDaImagem;
+      alert(data.message);
+      document.getElementById('preview-image').src = data.url; // Atualiza a imagem no perfil
     })
     .catch(error => console.error('Erro ao enviar imagem:', error));
-});
+  });
+
 
 
 //salvar imagem sem redirecionar pagina
-document.getElementById('update-cover-image').addEventListener('click', function() {
+document.getElementById('update-cover-image').addEventListener('click', function (e) {
+    e.preventDefault();
     const input = document.getElementById('cover-image');
     const file = input.files[0];
+
+    if (!file) {
+        alert('Selecione uma imagem para enviar.');
+        return;
+    }
+
     const formData = new FormData();
     formData.append('coverImage', file);
 
     fetch('/upload-cover', {
         method: 'POST',
         body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data.message);
-        document.getElementById('preview-cover-image').src = data.coverImagePath; // Atualiza a imagem na página
+        alert(data.message);
+        document.getElementById('preview-cover-image').src = data.url; // Atualiza a imagem de capa na página
     })
-    .catch(error => console.error('Erro ao enviar imagem:', error));
+    .catch(error => console.error('Erro ao enviar imagem de capa:', error));
 });
 
 //declaracao publicação
@@ -275,6 +230,7 @@ async function adicionarPublicacao(conteudo) {
             headers: {
                 'Content-Type': 'application/json'
             },
+           // body: JSON.stringify({ conteudo }), // Dados da publicação
             body: JSON.stringify({
                 usuarioId: 1,  // Substitua pelo ID do usuário atual
                 conteudo: conteudo
@@ -299,32 +255,7 @@ async function carregarPublicacoes() {
     }
 }
 //
-//=============================================================================
-// Endpoint para salvar informações do usuário (por exemplo, nome, email, etc.)
-//app.post("/save-user-info", (req, res) => {
-//    const userId = req.user.id;
-//    const { name, email, profileImagePath,coverImagePath,declaracoes,comentarios,profileImagePathNoView,publicacoes} = req.body;
-//  
-//    // Encontre o usuário correspondente com base no ID
-//    const currentUser = users.find(user => user.id === userId);
-//  
-//    // Atualize as informações do usuário
-//    currentUser.name = name;
-//    currentUser.email = email;
-//    currentUser.profileImagePath = profileImagePath;
-//    currentUser.coverImagePath = coverImagePath;
-//    currentUser.profileImagePathNoView =profileImagePathNoView;
-//    currentUser.declaracoes = declaracoes;
-//    currentUser.comentarios = comentarios;
-//    currentUser.publicacoes = publicacoes;
-//
-//    // Salve os dados atualizados no arquivo JSON
-//    saveUsersToFile(users);
-//  
-//    // Envie uma resposta adequada (por exemplo, JSON com mensagem de sucesso)
-//    res.json({ message: "Informações do usuário atualizadas com sucesso." });
-//  });
-  
+
   // Função para salvar usuários no arquivo JSON
   function saveUsersToFile(users) {
     fs.writeFileSync('users.json', JSON.stringify(users, null, 2), 'utf-8');
@@ -374,33 +305,65 @@ document.getElementById('btnEncontrarComunidades').addEventListener('click', fun
     window.location.href = '/procurarComunidades';
   });
 
-//adicionar amigo ----------------------------------
-//botao 
-// Botão de envio
+  function toggleParticipacao(comunidadeId) {
+    fetch(`/comunidade/${comunidadeId}/participar`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        window.location.reload();
+      })
+      .catch(error => console.error('Erro ao atualizar participação:', error));
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    fetch('/comunidades-usuario')
+        .then(response => response.json())
+        .then(data => {
+            const comunidadesContainer = document.getElementById('comunidades-container');
+            comunidadesContainer.innerHTML = ''; // Limpa o container antes de adicionar as comunidades
+
+            data.comunidades.forEach(comunidade => {
+                const comunidadeDiv = document.createElement('div');
+                comunidadeDiv.classList.add('comunidade');
+                comunidadeDiv.innerHTML = `
+                    <img src="${comunidade.imagemPerfil}" alt="Imagem de ${comunidade.nome}">
+                    <p>${comunidade.nome}</p>
+                `;
+                comunidadesContainer.appendChild(comunidadeDiv);
+            });
+        })
+        .catch(error => console.error('Erro ao carregar comunidades:', error));
+});
+
 document.getElementById('search-form').addEventListener('submit', function(event) {
     event.preventDefault();
     const email = document.getElementById('search-input').value;
-    
+  
     fetch('/buscar-usuario', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: email })
+      body: JSON.stringify({ email: email }),
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.error) {
-        document.getElementById('search-results').innerHTML = '<p>' + data.error + '</p>';
-      } else {
-        window.location.href = '/perfil/' + data.id;
-      }
-    })
-    .catch(error => console.error('Erro ao buscar usuário:', error));
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          document.getElementById('search-results').innerHTML = '<p>' + data.error + '</p>';
+        } else if (data._id) { // Verifica se o _id está presente
+          console.log('Usuário encontrado:', data);
+          window.location.href = '/perfil/' + data._id; // Usar data._id (ObjectId do MongoDB)
+        } else {
+          console.error('Erro: ID do usuário não encontrado no objeto:', data);
+          document.getElementById('search-results').innerHTML = '<p>Erro: ID do usuário não encontrado.</p>';
+        }
+      })
+      .catch(error => console.error('Erro ao buscar usuário:', error));
   });
 
-
-  
   function enviarSolicitacaoAmizade(friendId) {
     fetch('/adicionar-amigo', {
       method: 'POST',
@@ -449,6 +412,4 @@ document.getElementById('search-form').addEventListener('submit', function(event
         }
     });
     });
-
-
 });

@@ -9,66 +9,67 @@
   <div class="comunidade-container">
     <!-- Cabeçalho da Comunidade -->
     <div class="comunidade-header">
-      <div class="community-capa"> <img  src="<%= comunidade.imagemPerfil.replace('./views', '') %>" alt="Imagem da Comunidade"></div>
+      <div class="community-capa">
+        <img src="<%= comunidade.imagemPerfil %>" alt="Imagem de <%= comunidade.nome %>">
+      
+    </div>
+    <div> 
       <h1><%= comunidade.nome %></h1>
-      <p><%= comunidade.descricao %></p>
-      <button id="participarButton" onclick="toggleParticipacao('<%= comunidade.id %>')">
-        <%= comunidade.membros.includes(user.id) ? 'Sair da Comunidade' : 'Participar da Comunidade' %>
+      <p>Membros: <%= comunidade.quantidadeMembros %></p>
+      <button id="participarButton" onclick="toggleParticipacao('<%= comunidade._id %>')">
+        <%= comunidade.membros.includes(user._id.toString()) ? 'Sair da Comunidade' : 'Participar da Comunidade' %>
       </button>
     </div>
-
+    <div>
     <!-- Membros da Comunidade -->
     <h2>Membros</h2>
     <ul class="membros-lista">
       <% membros.forEach(membro => { %>
         <li>
-          <a href="/perfil/<%= membro.id %>">
-            <img src="<%= membro.profileImagePath.replace('./views', '') %>" alt="Foto de perfil" width="30" height="30">
+          <a href="/perfil/<%= membro._id %>">
+            <img src="<%= membro.profileImagePathNoView %>" alt="Foto de perfil" width="30" height="30">
             <%= membro.name %>
           </a>
         </li>
       <% }) %>
     </ul>
-
+    
+    <div>
+      <!-- Formulário para nova publicação -->
+      <form id="publicarForm" action="javascript:void(0);">
+        <textarea id="conteudoPublicacao" placeholder="Escreva uma publicação..." required></textarea>
+        <button type="submit">Publicar</button>
+      </form>
+    </div>
+    
     <!-- Publicações da Comunidade -->
     <h2>Publicações</h2>
-
-    <!-- Formulário para nova publicação -->
-    <form action="/comunidade/<%= comunidade.id %>/publicar" method="POST">
-      <textarea name="conteudo" placeholder="Escreva uma publicação..."></textarea>
-      <button type="submit">Publicar</button>
-    </form>
-
-
     <ul class="publicacoes-lista">
       <% publicacoes.forEach(publicacao => { %>
         <li class="publicacao-item">
           <!-- Perfil do Autor -->
           <div class="publicacao-autor">
-            <img src="<%= publicacao.autorImagem.replace('./views', '') %>" alt="Foto de perfil" class="autor-foto">
+            <img src="<%= publicacao.autorImagem %>" alt="Foto de perfil" class="autor-foto">
             <div class="autor-info">
               <strong><%= publicacao.autorNome %></strong>
-              <p class="publicacao-data"><%= new Date(publicacao.data).toLocaleString() %></p>
+              <p class="publicacao-data"><%= publicacao.dataFormatada %></p>
             </div>
           </div>
     
           <!-- Conteúdo da Publicação -->
           <div class="publicacao-conteudo">
             <p><%= publicacao.conteudo %></p>
-            <% if (publicacao.imagemPublicacao) { %>
-              <img src="<%= publicacao.imagemPublicacao %>" alt="Imagem da Publicação">
-            <% } %>
           </div>
         </li>
       <% }) %>
     </ul>
+  </div>
 
-    
   <script>
     function toggleParticipacao(comunidadeId) {
-      const isMembro = <%= comunidade.membros.includes(user.id) %>;
+      const isMembro = <%= comunidade.membros.includes(user._id.toString()) %>;
       const url = isMembro ? '/sair-comunidade' : '/entrar-comunidade';
-
+  
       fetch(url, {
         method: 'POST',
         headers: {
@@ -79,10 +80,35 @@
       .then(response => response.json())
       .then(data => {
         alert(data.message);
-        window.location.reload();
+        window.location.reload(); // Recarrega a página para atualizar o estado do botão
       })
       .catch(error => console.error('Erro ao atualizar participação:', error));
     }
+
+     // Envia a publicação para o servidor
+  document.getElementById('publicarForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const conteudo = document.getElementById('conteudoPublicacao').value;
+
+    if (!conteudo.trim()) {
+      alert('Digite um conteúdo válido.');
+      return;
+    }
+
+    fetch(`/comunidade/<%= comunidade._id %>/publicar`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ conteudo: conteudo })
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message);
+      window.location.reload(); // Recarrega a página para exibir a nova publicação
+    })
+    .catch(error => console.error('Erro ao publicar:', error));
+  }); 
   </script>
 </body>
 </html>

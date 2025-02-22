@@ -127,5 +127,57 @@
     "comunidadesDono": [
       "comunidade25"
     ]
+  },
+  {
+    "id": "1733276244368",
+    "name": "testador1",
+    "email": "testador1@teste",
+    "password": "$2b$10$I4F9osKF5UurdhppTuHOUOaiM8ZT.OVUGOv5oD5LJM0IAUz0AAt/u",
+    "profileImagePath": "./views/data/bbed8bf0b978056b97cf28a75dfcd6ef.gif1733276955270.gif",
+    "coverImagePath": "./views/data/ScreenShot00008-1920x1080-8f026eb01d6ae4e972179b65657bb94e.webp1733276996601.webp",
+    "profileImagePathNoView": "./data/bbed8bf0b978056b97cf28a75dfcd6ef.gif1733276955270.gif",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [
+      {
+        "id": "_ds4vyfcn1",
+        "autor": "1733276244368",
+        "conteudo": "123",
+        "data": "2024-12-04T01:43:49.533Z"
+      }
+    ],
+    "publicacoesAmigos": [],
+    "comunidades": [],
+    "comunidadesDono": [],
+    "profileImageName": "bbed8bf0b978056b97cf28a75dfcd6ef.gif1733276955270.gif",
+    "coverImageName": "ScreenShot00008-1920x1080-8f026eb01d6ae4e972179b65657bb94e.webp1733276996601.webp"
+  },
+  {
+    "id": "1733277591561",
+    "name": "testador2",
+    "email": "testador2@teste",
+    "password": "$2b$10$zYn7fhzcbZxHHsrjgOLveeJYfKVxJ9F0nT4x6NTSUHxTUbIBZGgN.",
+    "profileImagePath": "./views/dir.jpg",
+    "coverImagePath": "./views/default-cover-image.jpg",
+    "profileImagePathNoView": "dir.jpg",
+    "declaracoes": [],
+    "comentarios": [],
+    "amigos": [],
+    "publicacoes": [
+      {
+        "id": "_94lcdb6t2",
+        "autor": "1733277591561",
+        "conteudo": "123",
+        "data": "2024-12-04T02:05:50.779Z"
+      }
+    ],
+    "publicacoesAmigos": [],
+    "comunidades": [
+      "comunidade26"
+    ],
+    "comunidadesDono": [
+      "comunidade26"
+    ]
   }
 ]

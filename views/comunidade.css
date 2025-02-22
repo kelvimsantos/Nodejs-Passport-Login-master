@@ -30,6 +30,60 @@
     margin-top: 10px;
   }
 
+  #participarButton {
+    background-color: #570b6d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  #participarButton:hover {
+    background-color: #7a1c9a;
+  }
+  
+ /* Estilo para o formulário de publicação */
+#publicarForm {
+  width: 100%; /* Ocupa a largura total do container */
+  max-width: 600px; /* Define uma largura máxima para o formulário */
+  margin: 0 auto; /* Centraliza o formulário na página */
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+/* Estilo para o textarea */
+#conteudoPublicacao {
+  width: 100%; /* Ocupa a largura total do formulário */
+  height: 100px; /* Altura do textarea */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  resize: vertical; /* Permite redimensionar verticalmente */
+  margin-bottom: 10px; /* Espaçamento abaixo do textarea */
+}
+
+/* Estilo para o botão "Publicar" */
+#publicarForm button {
+  background-color: #570b6d;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: block; /* Faz o botão ocupar a largura total */
+  width: 100%; /* Ocupa a largura total do formulário */
+}
+
+#publicarForm button:hover {
+  background-color: #7a1c9a;
+}
+
 .comunidade-container {
     width: 80%;
     margin: 0 auto;
